@@ -1,60 +1,56 @@
 <script setup>
-import { reactive, computed, ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRecipeStore } from '@/stores/recipe'
 import { useUserStore } from '@/stores/user'
 import CustomTabBar from '@/components/CustomTabBar.vue'
 
 const recipeStore = useRecipeStore()
 const userStore = useUserStore()
-const currentStep = ref(0)
-const steps = ['基本信息', '食材清单', '制作步骤', '其他补充']
 
-const form = reactive({
-  title: '',
-  coverImage: '',
-  difficulty: '简单',
-  duration: '',
-  servings: 2,
-  crowd: '',
-  ingredients: [],
-  steps: [],
-  category: 'lunch',
-  cuisine: '其他',
-  tags: [],
-  tips: ''
-})
+const currentStep = ref(0)
+const stepLabels = ['基本信息', '食材清单', '制作步骤', '其他补充']
+
+const title = ref('')
+const coverImage = ref('')
+const difficulty = ref('简单')
+const duration = ref('')
+const servings = ref(2)
+const crowd = ref('')
+const ingredients = ref([{ name: '', amount: '', unit: '' }])
+const cookSteps = ref([{ id: Date.now(), desc: '', image: '' }])
+const category = ref('lunch')
+const cuisine = ref('其他')
+const tags = ref([])
+const tips = ref('')
 
 const isTitleTouched = ref(false)
 
 const canSubmit = computed(() => {
-  const nameTrimmed = form.title.trim()
-  const hasName = nameTrimmed.length > 0
-  const hasIngredients = form.ingredients.some(i => i.name.trim())
-  const hasSteps = form.steps.some(s => s.desc.trim())
+  const hasName = title.value.trim().length > 0
+  const hasIngredients = ingredients.value.some(i => i.name.trim().length > 0)
+  const hasSteps = cookSteps.value.some(s => s.desc.trim().length > 0)
   return hasName && hasIngredients && hasSteps
 })
 
 function nextStep() { currentStep.value = Math.min(3, currentStep.value + 1) }
 function prevStep() { currentStep.value = Math.max(0, currentStep.value - 1) }
 
-function addIngredient() { form.ingredients.push({ name: '', amount: '', unit: '' }) }
-function removeIngredient(idx) { form.ingredients.splice(idx, 1) }
+function addIngredient() { ingredients.value.push({ name: '', amount: '', unit: '' }) }
+function removeIngredient(idx) { ingredients.value.splice(idx, 1) }
 
-function addStep() {
-  form.steps.push({ id: Date.now(), desc: '', image: '' })
-}
-function removeStep(idx) { form.steps.splice(idx, 1) }
+function addCookStep() { cookSteps.value.push({ id: Date.now(), desc: '', image: '' }) }
+function removeCookStep(idx) { cookSteps.value.splice(idx, 1) }
 function addStepImage(idx) {
-  uni.chooseImage({ count: 1, success(res) { form.steps[idx].image = res.tempFilePaths[0] } })
+  uni.chooseImage({ count: 1, success(res) { cookSteps.value[idx].image = res.tempFilePaths[0] } })
 }
 function changeCover() {
-  uni.chooseImage({ count: 1, success(res) { form.coverImage = res.tempFilePaths[0] } })
+  uni.chooseImage({ count: 1, success(res) { coverImage.value = res.tempFilePaths[0] } })
 }
 
 function toggleTag(tag) {
-  const idx = form.tags.indexOf(tag)
-  if (idx === -1) form.tags.push(tag)
-  else form.tags.splice(idx, 1)
+  const i = tags.value.indexOf(tag)
+  if (i === -1) tags.value.push(tag)
+  else tags.value.splice(i, 1)
 }
 
 function handlePublish() {
@@ -64,21 +60,21 @@ function handlePublish() {
   }
   recipeStore.addRecipe({
     id: Date.now().toString(),
-    title: form.title.trim(),
-    coverImage: form.coverImage || 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 100),
+    title: title.value.trim(),
+    coverImage: coverImage.value || 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 100),
     author: { ...userStore.currentUser },
     rating: 0, ratingCount: 0,
     createdAt: new Date().toISOString(),
-    duration: parseInt(form.duration) || 30,
-    difficulty: form.difficulty,
-    category: form.category,
-    cuisine: form.cuisine,
-    tags: [...form.tags],
-    servings: form.servings,
-    ingredients: form.ingredients.filter(i => i.name.trim()).map(i => ({ ...i })),
-    steps: form.steps.filter(s => s.desc.trim()).map(s => ({ ...s })),
-    tips: form.tips,
-    crowd: form.crowd,
+    duration: parseInt(duration.value) || 30,
+    difficulty: difficulty.value,
+    category: category.value,
+    cuisine: cuisine.value,
+    tags: [...tags.value],
+    servings: servings.value,
+    ingredients: ingredients.value.filter(i => i.name.trim()).map(i => ({ ...i })),
+    steps: cookSteps.value.filter(s => s.desc.trim()).map(s => ({ ...s })),
+    tips: tips.value,
+    crowd: crowd.value,
     reviews: [],
     suggestions: []
   })
@@ -89,12 +85,12 @@ function handlePublish() {
 
 <template>
   <view class="upload-page">
-    <!-- 头部 + 步骤指示器 (对齐参考项目) -->
+    <!-- 头部 + 步骤指示器 -->
     <view class="upload-header">
       <view class="upload-header__safe" />
       <text class="upload-title">上传菜谱</text>
       <view class="step-bar">
-        <view v-for="(stepName, idx) in steps" :key="idx" class="step-node">
+        <view v-for="(label, idx) in stepLabels" :key="idx" class="step-node">
           <view
             class="step-dot"
             :class="{
@@ -108,9 +104,8 @@ function handlePublish() {
           <text
             class="step-name"
             :class="{ 'step-name--active': idx === currentStep }"
-          >{{ stepName }}</text>
+          >{{ label }}</text>
         </view>
-        <!-- 进度条 -->
         <view class="step-progress-track">
           <view class="step-progress-fill" :style="{ width: (currentStep / 3 * 100) + '%' }" />
         </view>
@@ -120,11 +115,10 @@ function handlePublish() {
     <!-- Step 0: 基本信息 -->
     <view v-if="currentStep === 0" class="form-body">
       <view class="form-card">
-        <!-- 封面图 (参考项目: 放最上面, 大图区) -->
         <view class="cover-area" @click="changeCover">
           <image
-            v-if="form.coverImage"
-            :src="form.coverImage"
+            v-if="coverImage"
+            :src="coverImage"
             mode="aspectFill"
             class="cover-img"
           />
@@ -137,7 +131,7 @@ function handlePublish() {
         <view class="field">
           <text class="field-label">菜品名称</text>
           <input
-            v-model="form.title"
+            v-model="title"
             class="field-input"
             placeholder="例如：红烧肉、蒜蓉西兰花"
             @blur="isTitleTouched = true"
@@ -147,19 +141,11 @@ function handlePublish() {
         <view class="field-row">
           <view class="field field--half">
             <text class="field-label">烹饪时长</text>
-            <input
-              v-model="form.duration"
-              class="field-input"
-              placeholder="如 30 mins"
-            />
+            <input v-model="duration" class="field-input" placeholder="如 30 mins" />
           </view>
           <view class="field field--half">
             <text class="field-label">适合人群</text>
-            <input
-              v-model="form.crowd"
-              class="field-input"
-              placeholder="如 老少皆宜"
-            />
+            <input v-model="crowd" class="field-input" placeholder="如 老少皆宜" />
           </view>
         </view>
 
@@ -167,11 +153,10 @@ function handlePublish() {
           <text class="field-label">难度</text>
           <view class="difficulty-row">
             <view
-              v-for="d in ['简单', '中等', '困难']"
-              :key="d"
+              v-for="d in ['简单', '中等', '困难']" :key="d"
               class="diff-btn"
-              :class="{ 'diff-btn--active': form.difficulty === d }"
-              @click="form.difficulty = d"
+              :class="{ 'diff-btn--active': difficulty === d }"
+              @click="difficulty = d"
             >{{ d }}</view>
           </view>
         </view>
@@ -186,10 +171,10 @@ function handlePublish() {
           <text class="form-card__sub">滑动删除</text>
         </view>
 
-        <view v-for="(ing, idx) in form.ingredients" :key="idx" class="ingredient-row">
+        <view v-for="(ing, idx) in ingredients" :key="idx" class="ingredient-row">
           <input v-model="ing.name" class="field-input ing-name" placeholder="食材名" />
           <input v-model="ing.amount" class="field-input ing-amount" placeholder="用量" />
-          <text v-if="form.ingredients.length > 1" class="ing-del" @click="removeIngredient(idx)">✕</text>
+          <text v-if="ingredients.length > 1" class="ing-del" @click="removeIngredient(idx)">✕</text>
         </view>
 
         <view class="dashed-add" @click="addIngredient">
@@ -205,27 +190,27 @@ function handlePublish() {
           <text class="form-card__title">制作步骤</text>
         </view>
 
-        <view v-for="(step, idx) in form.steps" :key="step.id" class="step-edit-row">
+        <view v-for="(st, idx) in cookSteps" :key="st.id" class="step-edit-row">
           <view class="step-num-circle">
             <text>{{ idx + 1 }}</text>
           </view>
           <view class="step-edit-body">
             <textarea
-              v-model="step.desc"
+              v-model="st.desc"
               class="step-textarea"
               :placeholder="'第 ' + (idx + 1) + ' 步的详细描述...'"
             />
             <view class="step-img-add" @click="addStepImage(idx)">
-              <image v-if="step.image" :src="step.image" mode="aspectFill" class="step-img" />
+              <image v-if="st.image" :src="st.image" mode="aspectFill" class="step-img" />
               <view v-else class="step-img-empty">
                 <text>📷 添加步骤图(可选)</text>
               </view>
             </view>
           </view>
-          <text v-if="form.steps.length > 1" class="step-del" @click="removeStep(idx)">✕</text>
+          <text v-if="cookSteps.length > 1" class="step-del" @click="removeCookStep(idx)">✕</text>
         </view>
 
-        <view class="dashed-add" @click="addStep">
+        <view class="dashed-add" @click="addCookStep">
           <text>+ 添加下一步</text>
         </view>
       </view>
@@ -241,8 +226,8 @@ function handlePublish() {
               v-for="c in [{k:'breakfast',v:'早餐'},{k:'lunch',v:'午餐'},{k:'dinner',v:'晚餐'},{k:'dessert',v:'甜点'}]"
               :key="c.k"
               class="cat-btn"
-              :class="{ 'cat-btn--active': form.category === c.k }"
-              @click="form.category = c.k"
+              :class="{ 'cat-btn--active': category === c.k }"
+              @click="category = c.k"
             >{{ c.v }}</view>
           </view>
         </view>
@@ -250,7 +235,7 @@ function handlePublish() {
         <view class="field">
           <text class="field-label">厨神贴士 (选填)</text>
           <textarea
-            v-model="form.tips"
+            v-model="tips"
             class="tips-textarea"
             placeholder="分享你的独门秘籍，让大家做得更好吃！"
           />
@@ -258,7 +243,7 @@ function handlePublish() {
       </view>
     </view>
 
-    <!-- 底部按钮 (对齐参考项目: fixed bottom bar) -->
+    <!-- 底部按钮栏 -->
     <view class="bottom-bar">
       <view class="bottom-bar__left">
         <text v-if="currentStep > 0" class="btn btn--ghost" @click="prevStep">上一步</text>
@@ -332,23 +317,11 @@ function handlePublish() {
   color: #8FA89B;
   transition: all 250ms ease;
 }
-.step-dot--active {
-  background: #5DBE9E;
-  color: #FFF;
-}
-.step-dot--done {
-  background: #E8F5EF;
-  color: #5DBE9E;
-}
+.step-dot--active { background: #5DBE9E; color: #FFF; }
+.step-dot--done { background: #E8F5EF; color: #5DBE9E; }
 .step-check { font-size: 20rpx; }
-.step-name {
-  font-size: 20rpx;
-  color: #8FA89B;
-}
-.step-name--active {
-  color: #5DBE9E;
-  font-weight: 600;
-}
+.step-name { font-size: 20rpx; color: #8FA89B; }
+.step-name--active { color: #5DBE9E; font-weight: 600; }
 
 .step-progress-track {
   position: absolute;
@@ -366,9 +339,7 @@ function handlePublish() {
 }
 
 /* ======== 表单主体 ======== */
-.form-body {
-  padding: 20rpx 24rpx;
-}
+.form-body { padding: 20rpx 24rpx; }
 
 .form-card {
   background: #FFF;
@@ -383,15 +354,8 @@ function handlePublish() {
   align-items: center;
   margin-bottom: 20rpx;
 }
-.form-card__title {
-  font-size: 28rpx;
-  font-weight: 700;
-  color: #2C3E33;
-}
-.form-card__sub {
-  font-size: 22rpx;
-  color: #8FA89B;
-}
+.form-card__title { font-size: 28rpx; font-weight: 700; color: #2C3E33; }
+.form-card__sub { font-size: 22rpx; color: #8FA89B; }
 
 /* ======== 封面区 ======== */
 .cover-area {
@@ -406,23 +370,15 @@ function handlePublish() {
   overflow: hidden;
   margin-bottom: 28rpx;
 }
-.cover-img {
-  width: 100%;
-  height: 100%;
-}
+.cover-img { width: 100%; height: 100%; }
 .cover-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12rpx;
 }
-.cover-icon {
-  font-size: 52rpx;
-}
-.cover-hint {
-  font-size: 26rpx;
-  color: #8FA89B;
-}
+.cover-icon { font-size: 52rpx; }
+.cover-hint { font-size: 26rpx; color: #8FA89B; }
 
 /* ======== 表单项 ======== */
 .field { margin-bottom: 24rpx; }
@@ -449,19 +405,11 @@ function handlePublish() {
   line-height: 96rpx;
 }
 
-.field-row {
-  display: flex;
-  gap: 16rpx;
-}
-.field--half {
-  flex: 1;
-}
+.field-row { display: flex; gap: 16rpx; }
+.field--half { flex: 1; }
 
 /* 难度按钮 */
-.difficulty-row {
-  display: flex;
-  gap: 12rpx;
-}
+.difficulty-row { display: flex; gap: 12rpx; }
 .diff-btn {
   flex: 1;
   height: 88rpx;
@@ -475,10 +423,7 @@ function handlePublish() {
   font-weight: 500;
   transition: all 200ms ease;
 }
-.diff-btn--active {
-  background: #5DBE9E;
-  color: #FFF;
-}
+.diff-btn--active { background: #5DBE9E; color: #FFF; }
 
 /* ======== 食材行 ======== */
 .ingredient-row {
@@ -487,13 +432,8 @@ function handlePublish() {
   align-items: center;
   margin-bottom: 14rpx;
 }
-.ing-name {
-  flex: 1;
-}
-.ing-amount {
-  width: 180rpx;
-  flex-shrink: 0;
-}
+.ing-name { flex: 1; }
+.ing-amount { width: 180rpx; flex-shrink: 0; }
 .ing-del {
   color: #E85D5D;
   font-size: 30rpx;
@@ -521,9 +461,7 @@ function handlePublish() {
   flex-shrink: 0;
   margin-top: 6rpx;
 }
-.step-edit-body {
-  flex: 1;
-}
+.step-edit-body { flex: 1; }
 .step-textarea {
   width: 100%;
   height: 180rpx;
@@ -535,9 +473,7 @@ function handlePublish() {
   box-sizing: border-box;
   line-height: 1.6;
 }
-.step-textarea::placeholder {
-  color: #BCC8C0;
-}
+.step-textarea::placeholder { color: #BCC8C0; }
 .step-img-add {
   margin-top: 12rpx;
   height: 140rpx;
@@ -549,14 +485,8 @@ function handlePublish() {
   justify-content: center;
   overflow: hidden;
 }
-.step-img {
-  width: 100%;
-  height: 100%;
-}
-.step-img-empty {
-  font-size: 24rpx;
-  color: #8FA89B;
-}
+.step-img { width: 100%; height: 100%; }
+.step-img-empty { font-size: 24rpx; color: #8FA89B; }
 .step-del {
   color: #E85D5D;
   font-size: 30rpx;
@@ -577,11 +507,7 @@ function handlePublish() {
 }
 
 /* ======== 分类网格 ======== */
-.cat-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12rpx;
-}
+.cat-grid { display: flex; flex-wrap: wrap; gap: 12rpx; }
 .cat-btn {
   width: calc(50% - 6rpx);
   height: 88rpx;
@@ -595,10 +521,7 @@ function handlePublish() {
   font-weight: 500;
   transition: all 200ms ease;
 }
-.cat-btn--active {
-  background: #5DBE9E;
-  color: #FFF;
-}
+.cat-btn--active { background: #5DBE9E; color: #FFF; }
 
 /* 贴士文本框 */
 .tips-textarea {
@@ -612,11 +535,9 @@ function handlePublish() {
   box-sizing: border-box;
   line-height: 1.6;
 }
-.tips-textarea::placeholder {
-  color: #BCC8C0;
-}
+.tips-textarea::placeholder { color: #BCC8C0; }
 
-/* ======== 底部按钮栏 (对齐参考项目) ======== */
+/* ======== 底部按钮栏 ======== */
 .bottom-bar {
   position: fixed;
   bottom: 100rpx;
@@ -631,11 +552,7 @@ function handlePublish() {
   align-items: center;
   z-index: 50;
 }
-.bottom-bar__right {
-  display: flex;
-  gap: 12rpx;
-  margin-left: auto;
-}
+.bottom-bar__right { display: flex; gap: 12rpx; margin-left: auto; }
 .btn {
   padding: 24rpx 48rpx;
   border-radius: 16rpx;
@@ -650,19 +567,8 @@ function handlePublish() {
   color: #FFF;
   box-shadow: 0 8rpx 20rpx rgba(93,190,158,0.22);
 }
-.btn--primary:active {
-  background: #4AA886;
-}
-.btn--ghost {
-  background: #F5F8F5;
-  color: #6B8274;
-  font-weight: 600;
-}
-.btn--disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-.bottom-spacer {
-  height: 160rpx;
-}
+.btn--primary:active { background: #4AA886; }
+.btn--ghost { background: #F5F8F5; color: #6B8274; font-weight: 600; }
+.btn--disabled { opacity: 0.4; }
+.bottom-spacer { height: 160rpx; }
 </style>

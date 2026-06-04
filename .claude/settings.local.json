@@ -3,7 +3,10 @@
     "allow": [
       "Bash(Get-ChildItem -Recurse -Depth 3 \"E:\\\\code\\\\菜谱小程序\\\\大\")",
       "Bash(Select-Object Mode, FullName)",
-      "Bash(New-Item *)"
+      "Bash(New-Item *)",
+      "Read(//c/Users/YIL/Downloads/Recipe Sharing Platform PRD \\(2\\)/**)",
+      "Read(//c/Users/YIL/Downloads/Recipe Sharing Platform PRD \\(2\\)//**)",
+      "Read(//c/Users/YIL/Downloads/**)"
     ]
   }
 }
