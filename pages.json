@@ -1,0 +1,48 @@
+{
+	"pages": [
+		{
+			"path": "pages/home/index",
+			"style": { "navigationStyle": "custom" }
+		},
+		{
+			"path": "pages/recipes/index",
+			"style": { "navigationBarTitleText": "发现菜谱" }
+		},
+		{
+			"path": "pages/recipe-detail/index",
+			"style": { "navigationStyle": "custom" }
+		},
+		{
+			"path": "pages/upload/index",
+			"style": { "navigationBarTitleText": "上传菜谱" }
+		},
+		{
+			"path": "pages/profile/index",
+			"style": { "navigationStyle": "custom" }
+		},
+		{
+			"path": "pages/my-uploads/index",
+			"style": { "navigationBarTitleText": "我的" }
+		},
+		{
+			"path": "pages/settings/index",
+			"style": { "navigationBarTitleText": "个人设置" }
+		}
+	],
+	"tabBar": {
+		"custom": true,
+		"list": [
+			{ "pagePath": "pages/home/index", "text": "首页" },
+			{ "pagePath": "pages/recipes/index", "text": "发现" },
+			{ "pagePath": "pages/upload/index", "text": "上传" },
+			{ "pagePath": "pages/profile/index", "text": "我的" }
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "小圈子菜谱",
+		"navigationBarBackgroundColor": "#FFFCF7",
+		"backgroundColor": "#FDF8F2"
+	},
+	"uniIdRouter": {}
+}

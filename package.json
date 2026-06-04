@@ -1,0 +1,8 @@
+{
+  "name": "recipe-platform",
+  "version": "1.0.0",
+  "description": "小圈子菜谱共享平台",
+  "dependencies": {
+    "pinia": "^2.1.0"
+  }
+}

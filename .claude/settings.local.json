@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Recurse -Depth 3 \"E:\\\\code\\\\菜谱小程序\\\\大\")",
+      "Bash(Select-Object Mode, FullName)",
+      "Bash(New-Item *)"
+    ]
+  }
+}
