@@ -1,0 +1,16 @@
+{
+  "description": "微信小程序编译配置（编译时会合并到 unpackage/dist/dev/mp-weixin/project.config.json）",
+  "compileType": "miniprogram",
+  "appid": "wx3af404a2d48c2787",
+  "projectname": "小圈子菜谱",
+  "libVersion": "3.4.10",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": false,
+    "newFeature": true,
+    "bigPackageSizeSupport": true
+  },
+  "condition": {}
+}

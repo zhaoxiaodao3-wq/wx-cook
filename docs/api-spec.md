@@ -269,17 +269,52 @@ interface Draft {
 
 ### 5.1 认证
 
+#### 前端登录流程（已实现，`LoginGate` + `stores/auth.ts`）
+
+**一键登录（未登录时）** — 必须调后端完成真实登录：
+
+| 步骤 | 前端实现 | 说明 |
+|------|----------|------|
+| 1 | 点击 **「微信一键登录」** | `uni.login()` 取 `code` |
+| 2 | `POST /auth/wechat-login` | 提交 `code` + `nickName: "微信用户"` + `avatarUrl: ""` |
+| 3 | 本地 `user_session_v5` | 保存 `token`、`user`、`wechatProfile`（登录时快照） |
+
+**勿使用** `getUserProfile` 做一键登录（真机仅返回「微信用户」+ 空头像）。
+
+**资料完善（已登录，`pages/settings`）** — 使用微信头像昵称填写能力：
+
+| 步骤 | 前端实现 | 说明 |
+|------|----------|------|
+| 1 | `open-type="chooseAvatar"` | 选头像，得到 `wxfile://` |
+| 2 | `input type="nickname"` | 可选用微信昵称 |
+| 3 | 保存 | `PATCH /users/me`；临时头像先 `POST /upload/image` |
+
+**未配置 `API_BASE_URL` 时**：仅微信开发者工具可走本地模拟登录；真机须配置后端。
+
+**进入小程序**：`init()` 读本地 session；无 session 则全屏 `LoginGate`；已登录不弹窗。
+
+---
+
 #### POST `/auth/wechat-login`
 
-微信小程序登录。
+微信小程序登录（**必须实现**，P0）。
 
 **请求：**
 
 ```json
 {
-  "code": "wx.login 返回的 code"
+  "code": "uni.login 返回，5 分钟有效，只能使用一次",
+  "nickName": "昵称；一键登录传「微信用户」，设置页完善时传用户填写值",
+  "avatarUrl": "https CDN 地址；一键登录可传空字符串；wxfile 临时路径建议传空，改头像走上传接口"
 }
 ```
+
+**后端处理建议：**
+
+1. 用 `code` 调微信 `auth.code2Session` 换取 `openid`（及 `session_key`，如需）。
+2. 按 `openid` 查找或创建用户；`nickName` 写入用户表 `name`。
+3. 若 `avatarUrl` 非空且为 `https://`，写入 `avatar`；若为空，保留原头像或默认图（前端随后可能调上传接口）。
+4. 签发 `token`（JWT 或自研 session），返回用户信息。
 
 **响应 `data`：**
 
@@ -288,15 +323,49 @@ interface Draft {
   "token": "jwt 或 session token",
   "expiresIn": 7200,
   "user": {
-    "id": "user-001",
-    "name": "美食爱好者",
-    "avatar": "https://...",
+    "id": "u_abc123",
+    "name": "用户填写的昵称",
+    "avatar": "https://cdn.example.com/avatar/xxx.jpg",
     "bio": ""
   }
 }
 ```
 
-**说明**：首次登录可自动注册；`name`/`avatar` 可用微信资料或默认值。
+**错误码建议：**
+
+| code | 说明 |
+|------|------|
+| 40001 | `code` 无效或已过期 |
+| 40002 | `nickName` 为空或超长（建议 ≤32） |
+| 50001 | 微信 code2Session 失败 |
+
+**与上传接口配合（推荐）：**
+
+```
+用户选头像(wxfile) → login(code, nickName, avatarUrl:"")
+  → 返回 token
+  → POST /upload/image (Bearer token, file)
+  → 返回 { url }
+  → 可选：PATCH /users/me { avatar: url }
+```
+
+前端在 `hasApiServer()` 为 true 时已按此顺序自动执行上传（见 `stores/auth.ts`）。
+
+---
+
+#### 登录相关本地存储结构（前端，非接口）
+
+键名：`user_session_v4`（`config/index.ts`）
+
+```json
+{
+  "token": "xxx",
+  "user": { "id": "", "name": "", "avatar": "", "bio": "" },
+  "wechatProfile": { "name": "登录时昵称", "avatar": "登录时头像 URL" }
+}
+```
+
+`wechatProfile` 供设置页「恢复微信头像与昵称」使用（仅恢复 name/avatar，不改 bio）。
 
 ---
 
@@ -681,25 +750,27 @@ interface Draft {
 
 #### POST `/upload/image`
 
-通用图片上传（封面、步骤图；头像可走 `/users/me/avatar`）。
+通用图片上传（**登录后头像**、菜谱封面、步骤图等）。
 
-**请求：** `multipart/form-data`，字段 `file`。
+**Auth：** 必需，`Authorization: Bearer <token>`
+
+**请求：** `multipart/form-data`，字段名 `file`。
 
 **响应 `data`：**
 
 ```json
 {
-  "url": "https://cdn.../images/xxx.jpg"
+  "url": "https://cdn.example.com/images/xxx.jpg"
 }
 ```
 
 **流程建议：**
 
-1. 用户 `uni.chooseImage` 得到临时路径  
-2. `uni.uploadFile` 到本接口  
-3. 发布菜谱时 `coverImage` / `steps[].image` 传 CDN URL  
+1. 登录时 `chooseAvatar` 得到 `wxfile://` → 先 `POST /auth/wechat-login` 拿 token → 再本接口上传 → 得到 `https` URL 写入用户头像（前端已实现在 `stores/auth.ts`）。  
+2. 发布菜谱：`uni.chooseImage` → 本接口 → `coverImage` / `steps[].image` 存 CDN URL。  
+3. 设置页换头像：同 2。
 
-当前前端使用 `tempFilePaths` 或 picsum 占位，**必须**经此接口才能多端可见。
+当前未接后端时头像为本地临时路径，仅当前设备可见；**上线必须接本接口**。
 
 ---
 
@@ -756,8 +827,9 @@ interface Draft {
 
 | 阶段 | 接口 | 原因 |
 |------|------|------|
-| P0 | 微信登录、`GET/POST /recipes`、`GET /recipes/:id` | 核心浏览与发布 |
-| P0 | `POST /upload/image` | 图片不打通无法上线 |
+| P0 | `POST /auth/wechat-login`（code2Session + 注册） | 登录基础 |
+| P0 | `POST /upload/image` | 登录头像、菜谱图片 |
+| P0 | `GET/POST /recipes`、`GET /recipes/:id` | 核心浏览与发布 |
 | P1 | 收藏、评分、建议 CRUD | 详情页互动 |
 | P1 | `GET /users/me`、资料 PATCH、头像 | 个人中心 |
 | P2 | `GET /users/me/recipes|favorites|reviews` | 我的列表 |
@@ -773,7 +845,9 @@ interface Draft {
 - [ ] Pinia Store 的内存操作改为调用上述接口  
 - [ ] `pages/upload` 接入 `uploadStore` 或服务端草稿  
 - [ ] 发布/设置前增加 `uni.uploadFile`  
-- [ ] `uni.login` + 启动时 token 刷新  
+- [x] 进入小程序检查登录态 + `chooseAvatar` / `nickname` / `uni.login`（`LoginGate` + `stores/auth.ts`）  
+- [ ] 配置 `config/index.ts` 中 `API_BASE_URL` 并联调 `POST /auth/wechat-login`  
+- [ ] 登录后头像临时路径自动 `POST /upload/image`（`api/upload.ts` 已预留）  
 - [ ] 首页/发现页「加载更多」改为服务端分页（当前为前端 `slice`）  
 
 ---
@@ -791,6 +865,12 @@ interface Draft {
 | `pages/my-uploads/index.vue` | 已发布 / 收藏 / 评价 |
 | `components/RatingModal.vue` | 评分 1–5 |
 | `components/SuggestionModal.vue` | 建议 ≤500 字 |
+| `components/LoginGate.vue` | 登录：chooseAvatar + nickname |
+| `components/PageShell.vue` | 未登录遮罩登录层 |
+| `stores/auth.ts` | 登录、session、微信资料恢复 |
+| `api/auth.ts` | `wechatLogin` |
+| `api/upload.ts` | `uploadImage` |
+| `utils/session.ts` | 本地登录态 `user_session_v4` |
 
 ---
 

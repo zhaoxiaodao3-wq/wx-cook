@@ -69,6 +69,10 @@ export interface Recipe {
   crowd: string
   reviews: Review[]
   suggestions: Suggestion[]
+  /** 后端列表/详情：当前用户是否收藏 */
+  isFavorite?: boolean
+  myReview?: { id: string; rating: number }
+  mySuggestion?: { id: string; content: string }
 }
 
 // === Mock 用户 ===

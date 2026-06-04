@@ -1,30 +1,76 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { useRecipeStore } from '@/stores/recipe'
 import CustomTabBar from '@/components/CustomTabBar.vue'
+import PageShell from '@/components/PageShell.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
 import { CATEGORIES } from '@/data/recipes'
+import { hasApiServer } from '@/api/request'
 
 const store = useRecipeStore()
 const categories = CATEGORIES
 const rankTab = ref('rating')
 const page = ref(1)
 const pageSize = 10
+/** 整页重绘 key，解决 Tab 页返回后 UI 不更新 */
+const pageKey = ref(0)
 
-const topRanked = computed(() => store.topRanked)
-const latestRecipes = computed(() => store.latestRecipes)
 const waterfallList = computed(() => {
-  const list = rankTab.value === 'new' ? latestRecipes.value : store.filteredRecipes
+  const list = rankTab.value === 'new' ? store.latestRecipes : store.filteredRecipes
+  if (hasApiServer()) return list
   return list.slice(0, page.value * pageSize)
 })
 
-onMounted(() => {
+const leftColumn = computed(() => waterfallList.value.filter((_, i) => i % 2 === 0))
+const rightColumn = computed(() => waterfallList.value.filter((_, i) => i % 2 === 1))
+const topThree = computed(() => store.topRanked.slice(0, 3))
+
+function listSortForTab(tab) {
+  return tab === 'new' ? 'createdAt' : 'rating'
+}
+
+async function reloadHome() {
+  page.value = 1
   store.setCategory('全部')
   store.setSearchQuery('')
+  store.setCuisine('')
+  store.setTag('')
+  if (hasApiServer()) {
+    await store.refreshPublicFeeds(listSortForTab(rankTab.value))
+  }
+  pageKey.value = store.feedsVersion
+}
+
+async function onRankTabTap(tab) {
+  if (rankTab.value === tab) return
+  rankTab.value = tab
+  page.value = 1
+  if (hasApiServer()) {
+    await store.setListSort(listSortForTab(tab))
+  }
+  pageKey.value = store.feedsVersion
+}
+
+onMounted(() => {
+  uni.$on('recipe-feeds-changed', onFeedsChanged)
+  reloadHome().catch(() => {})
+})
+
+onUnmounted(() => {
+  uni.$off('recipe-feeds-changed', onFeedsChanged)
+})
+
+function onFeedsChanged() {
+  pageKey.value = store.feedsVersion
+}
+
+onShow(() => {
+  reloadHome().catch(() => {})
 })
 
 function onSearchTap() {
-  uni.navigateTo({ url: '/pages/recipes/index?focusSearch=1' })
+  store.openRecipesTab({ focusSearch: true })
 }
 
 function onCategoryTap(cat) {
@@ -36,13 +82,18 @@ function onRecipeClick(id) {
   uni.navigateTo({ url: '/pages/recipe-detail/index?id=' + id })
 }
 
-function loadMore() {
+async function loadMore() {
+  if (hasApiServer()) {
+    await store.loadMoreList()
+    return
+  }
   page.value++
 }
 </script>
 
 <template>
-  <view class="home-page">
+  <PageShell>
+  <view class="home-page" :key="'home-' + pageKey">
     <!-- 头部 -->
     <view class="home-header">
       <view class="home-header__safe" />
@@ -80,12 +131,12 @@ function loadMore() {
           <text
             class="rank-tab"
             :class="{ 'rank-tab--active': rankTab === 'rating' }"
-            @click="rankTab = 'rating'"
+            @click="onRankTabTap('rating')"
           >热门排行</text>
           <text
             class="rank-tab"
             :class="{ 'rank-tab--active': rankTab === 'new' }"
-            @click="rankTab = 'new'"
+            @click="onRankTabTap('new')"
           >最新上传</text>
         </view>
       </view>
@@ -93,8 +144,8 @@ function loadMore() {
       <!-- 排行榜列表 -->
       <view v-if="rankTab === 'rating'" class="rank-list">
         <view
-          v-for="(recipe, idx) in topRanked.slice(0, 3)"
-          :key="recipe.id"
+          v-for="(recipe, idx) in topThree"
+          :key="recipe.id + '-' + recipe.rating + '-' + pageKey"
           class="rank-item card-stagger"
           @click="onRecipeClick(recipe.id)"
         >
@@ -102,7 +153,7 @@ function loadMore() {
           <image class="rank-item__cover" :src="recipe.coverImage" mode="aspectFill" />
           <view class="rank-item__info">
             <text class="rank-item__title">{{ recipe.title }}</text>
-            <text class="rank-item__author">{{ recipe.author.name }}</text>
+            <text class="rank-item__author">{{ recipe.author?.name || '匿名' }}</text>
             <view class="rank-item__rating">
               <text>★ {{ recipe.rating }}</text>
             </view>
@@ -114,16 +165,16 @@ function loadMore() {
       <view class="waterfall">
         <view class="waterfall__col">
           <RecipeCard
-            v-for="(recipe, idx) in waterfallList.filter((_, i) => i % 2 === 0)"
-            :key="recipe.id"
+            v-for="recipe in leftColumn"
+            :key="recipe.id + '-' + recipe.rating + '-' + pageKey"
             :recipe="recipe"
             @click="onRecipeClick"
           />
         </view>
         <view class="waterfall__col">
           <RecipeCard
-            v-for="(recipe, idx) in waterfallList.filter((_, i) => i % 2 === 1)"
-            :key="recipe.id"
+            v-for="recipe in rightColumn"
+            :key="recipe.id + '-' + recipe.rating + '-' + pageKey"
             :recipe="recipe"
             @click="onRecipeClick"
           />
@@ -138,6 +189,7 @@ function loadMore() {
     <view class="bottom-placeholder" />
     <CustomTabBar />
   </view>
+  </PageShell>
 </template>
 
 <style lang="scss" scoped>

@@ -1,20 +1,40 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRecipeStore } from '@/stores/recipe'
 import CustomTabBar from '@/components/CustomTabBar.vue'
+import PageShell from '@/components/PageShell.vue'
+import { hasApiServer } from '@/api/request'
+import { resolveMediaUrl } from '@/utils/media'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
+const { isLoggedIn } = storeToRefs(useAuthStore())
 const recipeStore = useRecipeStore()
 
-const user = computed(() => userStore.currentUser)
-const myRecipes = computed(() => recipeStore.recipes.filter(r => r.author.id === userStore.currentUser.id))
-const stats = computed(() => ({
-  uploads: myRecipes.value.length,
-  reviews: userStore.myReviews.length,
-  suggestions: userStore.mySuggestions.length,
-  favorites: userStore.favorites.length
+const user = computed(() => ({
+  ...userStore.currentUser,
+  avatar: resolveMediaUrl(userStore.currentUser.avatar),
 }))
+const displayAvatar = computed(() => !!user.value.avatar)
+
+const stats = computed(() => {
+  if (hasApiServer()) return userStore.userStats
+  const myRecipes = recipeStore.recipes.filter(
+    (r) => r.author.id === userStore.currentUser.id
+  )
+  return {
+    uploads: myRecipes.length,
+    reviews: userStore.myReviews.length,
+    suggestions: userStore.mySuggestions.length,
+    favorites: userStore.favorites.length,
+  }
+})
+
+onMounted(() => {
+  if (hasApiServer() && isLoggedIn.value) userStore.refreshFromServer()
+})
 
 const menuItems = [
   { label: '我的上传', icon: '📋', url: '/pages/my-uploads/index' },
@@ -35,14 +55,18 @@ function onMenuTap(item) {
 </script>
 
 <template>
+  <PageShell>
   <view class="profile-page">
     <!-- Hero 头部 -->
     <view class="profile-header">
       <view class="profile-header__safe" />
       <view class="profile-header__info">
-        <image class="profile-avatar" :src="user.avatar" mode="aspectFill" />
+        <image v-if="displayAvatar" class="profile-avatar" :src="user.avatar" mode="aspectFill" />
+        <view v-else class="profile-avatar profile-avatar--empty">
+          <text>👤</text>
+        </view>
         <text class="profile-name">{{ user.name }}</text>
-        <text class="profile-bio">{{ user.bio }}</text>
+        <text class="profile-bio">{{ user.bio || '写一句简介介绍自己吧' }}</text>
       </view>
     </view>
 
@@ -84,6 +108,7 @@ function onMenuTap(item) {
     <view class="bottom-placeholder" />
     <CustomTabBar />
   </view>
+  </PageShell>
 </template>
 
 <style lang="scss" scoped>
@@ -94,6 +119,13 @@ function onMenuTap(item) {
 .profile-header__safe { height: var(--status-bar-height, 44px); }
 .profile-header__info { display: flex; flex-direction: column; align-items: center; padding: 48rpx 0 80rpx; }
 .profile-avatar { width: 130rpx; height: 130rpx; border-radius: 50%; border: 3rpx solid rgba(255,255,255,0.5); box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.15); }
+.profile-avatar--empty {
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56rpx;
+}
 .profile-name { font-size: 36rpx; font-weight: 800; color: #FFF; margin-top: 20rpx; letter-spacing: 1rpx; }
 .profile-bio { font-size: 24rpx; color: rgba(255,255,255,0.75); margin-top: 8rpx; }
 

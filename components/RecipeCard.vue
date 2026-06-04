@@ -1,43 +1,69 @@
 <script setup>
+import { computed } from 'vue'
+
 const props = defineProps({
-  recipe: { type: Object, required: true }
+  recipe: { type: Object, required: true },
 })
 const emit = defineEmits(['click'])
-function handleClick() { emit('click', props.recipe.id) }
+
+const authorName = computed(() => props.recipe.author?.name || '匿名')
+const authorAvatar = computed(() => props.recipe.author?.avatar || '')
+const tagList = computed(() =>
+  Array.isArray(props.recipe.tags) ? props.recipe.tags.slice(0, 2) : []
+)
+const coverSrc = computed(() => props.recipe.coverImage || '')
+const difficulty = computed(() => props.recipe.difficulty || '')
+const rating = computed(() => props.recipe.rating ?? 0)
+const ratingCount = computed(() => props.recipe.ratingCount ?? 0)
+const duration = computed(() => props.recipe.duration ?? 0)
+const title = computed(() => props.recipe.title || '未命名菜谱')
+
+function handleClick() {
+  emit('click', props.recipe.id)
+}
 </script>
 
 <template>
-  <view class="recipe-card card-stagger press-scale" @click="handleClick">
-    <!-- 封面区 -->
+  <view class="recipe-card press-scale" @click="handleClick">
     <view class="recipe-card__cover-wrap">
-      <image class="recipe-card__cover" :src="recipe.coverImage" mode="widthFix" lazy-load />
-      <!-- 难度标签 — 斜放角落 -->
-      <view class="recipe-card__difficulty">
-        <text>{{ recipe.difficulty }}</text>
+      <image
+        v-if="coverSrc"
+        class="recipe-card__cover"
+        :src="coverSrc"
+        mode="widthFix"
+        lazy-load
+      />
+      <view v-else class="recipe-card__cover recipe-card__cover--empty">
+        <text>暂无图片</text>
+      </view>
+      <view v-if="difficulty" class="recipe-card__difficulty">
+        <text>{{ difficulty }}</text>
       </view>
     </view>
 
-    <!-- 信息区 — 非对称排版 -->
     <view class="recipe-card__body">
-      <text class="recipe-card__title">{{ recipe.title }}</text>
+      <text class="recipe-card__title">{{ title }}</text>
 
-      <!-- 作者行 — 小头像 + 名字 -->
       <view class="recipe-card__meta">
-        <image class="recipe-card__avatar" :src="recipe.author.avatar" mode="aspectFill" />
-        <text class="recipe-card__author">{{ recipe.author.name }}</text>
+        <image
+          v-if="authorAvatar"
+          class="recipe-card__avatar"
+          :src="authorAvatar"
+          mode="aspectFill"
+        />
+        <view v-else class="recipe-card__avatar recipe-card__avatar--empty" />
+        <text class="recipe-card__author">{{ authorName }}</text>
         <view class="recipe-card__dot" />
-        <text class="recipe-card__time">{{ recipe.duration }}min</text>
+        <text class="recipe-card__time">{{ duration }}分钟</text>
       </view>
 
-      <!-- 底部：星级 + 标签 -->
       <view class="recipe-card__footer">
         <view class="recipe-card__stars">
-          <text class="recipe-card__star-icon">★</text>
-          <text class="recipe-card__rating">{{ recipe.rating }}</text>
-          <text class="recipe-card__count">({{ recipe.ratingCount }})</text>
+          <text class="recipe-card__rating">{{ rating }}</text>
+          <text class="recipe-card__count">分 ({{ ratingCount }})</text>
         </view>
-        <view class="recipe-card__tags">
-          <text class="recipe-card__tag" v-for="tag in recipe.tags.slice(0, 2)" :key="tag">{{ tag }}</text>
+        <view v-if="tagList.length" class="recipe-card__tags">
+          <text v-for="tag in tagList" :key="tag" class="recipe-card__tag">{{ tag }}</text>
         </view>
       </view>
     </view>
@@ -49,9 +75,8 @@ function handleClick() { emit('click', props.recipe.id) }
   background: #FFFFFF;
   border-radius: 20rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.04), 0 4rpx 32rpx rgba(0,0,0,0.025);
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.04);
   margin-bottom: 32rpx;
-  transition: transform 200ms ease, box-shadow 200ms ease;
 }
 
 .recipe-card__cover-wrap {
@@ -62,25 +87,27 @@ function handleClick() { emit('click', props.recipe.id) }
 .recipe-card__cover {
   width: 100%;
   display: block;
-  transition: transform 400ms ease;
 }
 
-.recipe-card:active .recipe-card__cover {
-  transform: scale(1.03);
+.recipe-card__cover--empty {
+  height: 200rpx;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #999;
 }
 
 .recipe-card__difficulty {
   position: absolute;
   top: 16rpx;
   right: 16rpx;
-  background: rgba(251, 248, 253, 0.9);
-  backdrop-filter: blur(8rpx);
+  background: rgba(255, 255, 255, 0.92);
   padding: 6rpx 16rpx;
   border-radius: 9999rpx;
   font-size: 20rpx;
   color: #777777;
-  letter-spacing: 2rpx;
-  font-weight: 500;
 }
 
 .recipe-card__body {
@@ -96,7 +123,6 @@ function handleClick() { emit('click', props.recipe.id) }
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  letter-spacing: 1rpx;
 }
 
 .recipe-card__meta {
@@ -110,6 +136,11 @@ function handleClick() { emit('click', props.recipe.id) }
   height: 32rpx;
   border-radius: 50%;
   margin-right: 8rpx;
+  flex-shrink: 0;
+}
+
+.recipe-card__avatar--empty {
+  background: #e8e8e8;
 }
 
 .recipe-card__author {
@@ -141,19 +172,14 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__stars {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 4rpx;
-}
-
-.recipe-card__star-icon {
-  color: #52C41A;
-  font-size: 22rpx;
 }
 
 .recipe-card__rating {
   font-size: 24rpx;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #52C41A;
 }
 
 .recipe-card__count {
@@ -172,6 +198,5 @@ function handleClick() { emit('click', props.recipe.id) }
   background: #F0FAF0;
   padding: 4rpx 14rpx;
   border-radius: 9999rpx;
-  letter-spacing: 1rpx;
 }
 </style>

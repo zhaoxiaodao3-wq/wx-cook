@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useRecipeStore } from '@/stores/recipe'
 import { useUserStore } from '@/stores/user'
 import CustomTabBar from '@/components/CustomTabBar.vue'
+import PageShell from '@/components/PageShell.vue'
 
 const recipeStore = useRecipeStore()
 const userStore = useUserStore()
@@ -68,8 +69,10 @@ function toggleTag(tag) {
   else tags.value.splice(i, 1)
 }
 
-function handlePublish() {
-  
+const publishing = ref(false)
+
+async function handlePublish() {
+  if (publishing.value) return
   if (!canSubmit.value) {
     isTitleTouched.value = true
     const hints = []
@@ -79,32 +82,37 @@ function handlePublish() {
     uni.showToast({ title: `请完善：${hints.join('、')}`, icon: 'none' })
     return
   }
-  recipeStore.addRecipe({
-    id: Date.now().toString(),
-    title: title.value.trim(),
-    coverImage: coverImage.value || 'https://picsum.photos/600/400?random=' + Math.floor(Math.random() * 100),
-    author: { ...userStore.currentUser },
-    rating: 0, ratingCount: 0,
-    createdAt: new Date().toISOString(),
-    duration: parseInt(duration.value) || 30,
-    difficulty: difficulty.value,
-    category: category.value,
-    cuisine: cuisine.value,
-    tags: [...tags.value],
-    servings: servings.value,
-    ingredients: ingredients.value.filter(i => i.name.trim()).map(i => ({ ...i })),
-    steps: cookSteps.value.filter(s => s.desc.trim()).map(s => ({ ...s })),
-    tips: tips.value,
-    crowd: crowd.value,
-    reviews: [],
-    suggestions: []
-  })
-  uni.showToast({ title: '发布成功', icon: 'success' })
-  setTimeout(() => uni.switchTab({ url: '/pages/home/index' }), 800)
+  publishing.value = true
+  try {
+    await recipeStore.publishRecipe({
+      title: title.value.trim(),
+      coverImage: coverImage.value,
+      duration: parseInt(duration.value) || 30,
+      difficulty: difficulty.value,
+      category: category.value,
+      cuisine: cuisine.value,
+      tags: [...tags.value],
+      servings: servings.value,
+      ingredients: ingredients.value.filter((i) => i.name.trim()).map((i) => ({ ...i })),
+      steps: cookSteps.value.filter((s) => s.desc.trim()).map((s) => ({ ...s })),
+      tips: tips.value,
+      crowd: crowd.value,
+    })
+    uni.showToast({ title: '发布成功', icon: 'success' })
+    setTimeout(() => uni.switchTab({ url: '/pages/home/index' }), 800)
+  } catch (e) {
+    uni.showToast({
+      title: e instanceof Error ? e.message : '发布失败',
+      icon: 'none',
+    })
+  } finally {
+    publishing.value = false
+  }
 }
 </script>
 
 <template>
+  <PageShell>
   <view class="upload-page">
     <!-- 头部 + 步骤指示器 -->
     <view class="upload-header">
@@ -283,6 +291,7 @@ function handlePublish() {
     <view class="bottom-spacer" />
     <CustomTabBar />
   </view>
+  </PageShell>
 </template>
 
 <style lang="scss" scoped>

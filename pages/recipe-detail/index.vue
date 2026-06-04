@@ -1,10 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { hasApiServer } from '@/api/request'
 import { useRecipeStore } from '@/stores/recipe'
 import { useUserStore } from '@/stores/user'
 import RatingModal from '@/components/RatingModal.vue'
 import SuggestionModal from '@/components/SuggestionModal.vue'
+import PageShell from '@/components/PageShell.vue'
 
 const recipeStore = useRecipeStore()
 const userStore = useUserStore()
@@ -25,19 +27,63 @@ const scaledIngredients = computed(() => {
   }))
 })
 
-const isFav = computed(() => userStore.isFavorite(recipe.value?.id))
+const isFav = computed(() => {
+  if (!recipe.value) return false
+  if (recipe.value.isFavorite !== undefined) return !!recipe.value.isFavorite
+  return userStore.isFavorite(recipe.value.id)
+})
 
-onLoad((options) => {
-  const r = recipeStore.recipeById(options.id)
-  if (r) {
-    recipe.value = r
-    servings.value = r.servings
+onLoad(async (options) => {
+  const id = options?.id
+  if (!id) return
+  try {
+    uni.showLoading({ title: '加载中' })
+    const r = hasApiServer()
+      ? await recipeStore.fetchRecipeDetail(id)
+      : recipeStore.recipeById(id)
+    if (r) {
+      recipe.value = r
+      servings.value = r.servings
+    }
+  } catch (e) {
+    uni.showToast({
+      title: e instanceof Error ? e.message : '加载失败',
+      icon: 'none',
+    })
+  } finally {
+    uni.hideLoading()
   }
 })
 
-function toggleFav() {
+onUnload(() => {
+  if (hasApiServer()) {
+    recipeStore.markFeedsStale()
+    recipeStore.refreshPublicFeeds().catch(() => {})
+  }
+})
+
+async function goBack() {
+  if (hasApiServer()) {
+    try {
+      await recipeStore.refreshPublicFeeds()
+    } catch {
+      recipeStore.markFeedsStale()
+    }
+  }
+  uni.navigateBack()
+}
+
+async function toggleFav() {
   if (!recipe.value) return
-  userStore.toggleFavorite(recipe.value.id)
+  try {
+    await userStore.toggleFavorite(recipe.value.id)
+    recipe.value.isFavorite = userStore.isFavorite(recipe.value.id)
+  } catch (e) {
+    uni.showToast({
+      title: e instanceof Error ? e.message : '操作失败',
+      icon: 'none',
+    })
+  }
 }
 
 function toggleIngredient(name) {
@@ -49,60 +95,99 @@ function toggleIngredient(name) {
 }
 
 function onIngredientTap(name) {
-  uni.navigateTo({ url: '/pages/recipes/index?query=' + encodeURIComponent(name) })
+  recipeStore.openRecipesTab({ query: name })
 }
 
-function submitRating(rating) {
+async function submitRating(rating) {
   if (!recipe.value) return
   const u = userStore.currentUser
-  recipeStore.rateRecipe(recipe.value.id, u.id, u.name, u.avatar, rating)
-  userStore.addReview(recipe.value.id, rating)
-  showRating.value = false
+  try {
+    await recipeStore.rateRecipe(recipe.value.id, u.id, u.name, u.avatar, rating)
+    userStore.addReview(recipe.value.id, rating)
+    recipe.value = recipeStore.recipeById(recipe.value.id) || recipe.value
+    showRating.value = false
+  } catch (e) {
+    uni.showToast({
+      title: e instanceof Error ? e.message : '评分失败',
+      icon: 'none',
+    })
+  }
 }
 
-function submitSuggestion(content) {
+async function submitSuggestion(content) {
   if (!recipe.value) return
   const u = userStore.currentUser
-  recipeStore.suggestRecipe(recipe.value.id, u.id, u.name, u.avatar, content)
-  userStore.addSuggestion(recipe.value.id, content)
-  showSuggestion.value = false
+  try {
+    await recipeStore.suggestRecipe(recipe.value.id, u.id, u.name, u.avatar, content)
+    userStore.addSuggestion(recipe.value.id, content)
+    recipe.value = recipeStore.recipeById(recipe.value.id) || recipe.value
+    showSuggestion.value = false
+  } catch (e) {
+    uni.showToast({
+      title: e instanceof Error ? e.message : '提交失败',
+      icon: 'none',
+    })
+  }
 }
 
-function deleteMyReview() {
+async function deleteMyReview() {
   if (!recipe.value) return
-  const myReview = recipe.value.reviews.find(rv => rv.userId === userStore.currentUser.id)
-  if (myReview) {
-    recipeStore.deleteReview(recipe.value.id, myReview.id)
+  const reviewId =
+    recipe.value.myReview?.id ||
+    recipe.value.reviews.find((rv) => rv.userId === userStore.currentUser.id)?.id
+  if (!reviewId) return
+  try {
+    await recipeStore.deleteReview(recipe.value.id, reviewId)
     userStore.removeReview(recipe.value.id)
+    recipe.value = recipeStore.recipeById(recipe.value.id) || recipe.value
+  } catch (e) {
+    uni.showToast({
+      title: e instanceof Error ? e.message : '删除失败',
+      icon: 'none',
+    })
   }
 }
 
-function deleteMySuggestion() {
+async function deleteMySuggestion() {
   if (!recipe.value) return
-  const mySuggestion = recipe.value.suggestions.find(s => s.userId === userStore.currentUser.id)
-  if (mySuggestion) {
-    recipeStore.deleteSuggestion(recipe.value.id, mySuggestion.id)
+  const suggestionId =
+    recipe.value.mySuggestion?.id ||
+    recipe.value.suggestions.find((s) => s.userId === userStore.currentUser.id)?.id
+  if (!suggestionId) return
+  try {
+    await recipeStore.deleteSuggestion(recipe.value.id, suggestionId)
     userStore.removeSuggestion(recipe.value.id)
+    recipe.value = recipeStore.recipeById(recipe.value.id) || recipe.value
+  } catch (e) {
+    uni.showToast({
+      title: e instanceof Error ? e.message : '删除失败',
+      icon: 'none',
+    })
   }
 }
 
-const hasMyReview = computed(() =>
-  recipe.value?.reviews.some(rv => rv.userId === userStore.currentUser.id)
+const hasMyReview = computed(
+  () =>
+    !!recipe.value?.myReview ||
+    !!recipe.value?.reviews.some((rv) => rv.userId === userStore.currentUser.id)
 )
 
-const hasMySuggestion = computed(() =>
-  recipe.value?.suggestions.some(s => s.userId === userStore.currentUser.id)
+const hasMySuggestion = computed(
+  () =>
+    !!recipe.value?.mySuggestion ||
+    !!recipe.value?.suggestions.some((s) => s.userId === userStore.currentUser.id)
 )
 </script>
 
 <template>
+  <PageShell>
   <view v-if="recipe" class="detail-page">
     <!-- 封面图 -->
     <view class="detail-cover">
       <image :src="recipe.coverImage" mode="aspectFill" class="detail-cover__img" />
       <view class="cover-gradient" />
       <view class="detail-cover__top">
-        <view class="detail-cover__back" @click="uni.navigateBack()">
+        <view class="detail-cover__back" @click="goBack">
           <text>←</text>
         </view>
         <view class="detail-cover__fav" @click="toggleFav">
@@ -264,6 +349,7 @@ const hasMySuggestion = computed(() =>
       @close="showSuggestion = false"
     />
   </view>
+  </PageShell>
 </template>
 
 <style lang="scss" scoped>

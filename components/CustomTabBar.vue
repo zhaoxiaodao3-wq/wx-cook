@@ -1,5 +1,8 @@
 <script setup>
 import { computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 const tabs = [
   { path: '/pages/home/index', label: '首页', icon: 'home' },
@@ -14,6 +17,10 @@ const currentRoute = computed(() => {
 })
 
 function switchTab(path) {
+  if (!authStore.isLoggedIn) {
+    uni.showToast({ title: '请先完成微信登录', icon: 'none' })
+    return
+  }
   uni.switchTab({ url: path })
 }
 </script>
