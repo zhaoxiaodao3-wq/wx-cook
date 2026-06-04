@@ -48,7 +48,7 @@ function saveProfile() {
 .settings-row, .avatar-row { display: flex; align-items: center; justify-content: space-between; padding: 32rpx 28rpx; border-bottom: 1rpx solid #F0F0F0; }
 .settings-row:last-child { border-bottom: none; }
 .settings-label { font-size: 28rpx; color: #1a1a1a; flex-shrink: 0; font-weight: 500; }
-.settings-input { text-align: right; font-size: 26rpx; color: #999999; flex: 1; margin-left: 32rpx; }
+.settings-input { text-align: right; font-size: 26rpx; color: #777777; flex: 1; margin-left: 32rpx; }
 .settings-avatar { width: 88rpx; height: 88rpx; border-radius: 50%; border: 2rpx solid #F0F0F0; }
 .save-btn { background: #52C41A; color: #FFF; text-align: center; padding: 24rpx; border-radius: 9999rpx; margin-top: 56rpx; font-size: 30rpx; font-weight: 700; letter-spacing: 3rpx; box-shadow: 0 4rpx 16rpx rgba(82,196,26,0.2); }
 .save-btn:active { transform: scale(0.97); }

@@ -43,7 +43,7 @@ function switchTab(path) {
   right: 0;
   height: 110rpx;
   padding-bottom: env(safe-area-inset-bottom);
-  background: rgba(250, 252, 249, 0.92);
+  background: rgba(251, 248, 253, 0.92);
   backdrop-filter: blur(20rpx);
   display: flex;
   align-items: center;
@@ -83,7 +83,7 @@ function switchTab(path) {
 .tab-bar__icon {
   width: 36rpx;
   height: 36rpx;
-  background: #999999;
+  background: #777777;
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -109,7 +109,7 @@ function switchTab(path) {
 
 .tab-bar__label {
   font-size: 20rpx;
-  color: #999999;
+  color: #777777;
   letter-spacing: 2rpx;
   font-weight: 500;
 }

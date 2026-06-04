@@ -150,7 +150,7 @@ function loadMore() {
 .recipes-page {
   min-height: 100vh;
   padding-bottom: 140rpx;
-  animation: editorial-enter 400ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation: fade-in-up 400ms ease-out;
 }
 
 .search-bar { padding: 20rpx 32rpx; background: #FFFFFF; border-bottom: 1rpx solid #F0F0F0; }
@@ -160,13 +160,13 @@ function loadMore() {
 }
 .search-bar__icon { font-size: 28rpx; margin-right: 12rpx; opacity: 0.5; flex-shrink: 0; }
 .search-bar__input { flex: 1; font-size: 26rpx; color: #1a1a1a; }
-.search-bar__clear { color: #999999; font-size: 28rpx; padding: 4rpx; flex-shrink: 0; }
+.search-bar__clear { color: #777777; font-size: 28rpx; padding: 4rpx; flex-shrink: 0; }
 
 .filter-row { white-space: nowrap; padding: 16rpx 32rpx; background: #FFFFFF; border-bottom: 1rpx solid rgba(237,228,218,0.5); }
 .filter-row--sub { padding-top: 0; border-bottom: none; }
 .filter-chip {
   display: inline-block; padding: 10rpx 26rpx; border-radius: 9999rpx;
-  font-size: 24rpx; color: #999999; background: transparent; margin-right: 12rpx;
+  font-size: 24rpx; color: #777777; background: transparent; margin-right: 12rpx;
   border: 1rpx solid #F0F0F0; letter-spacing: 1rpx; transition: all 200ms ease;
 }
 .filter-chip--sub { font-size: 22rpx; padding: 8rpx 22rpx; }
@@ -175,13 +175,13 @@ function loadMore() {
   box-shadow: 0 4rpx 12rpx rgba(82,196,26,0.18);
 }
 
-.result-count { padding: 20rpx 32rpx 8rpx; font-size: 22rpx; color: #999999; letter-spacing: 1rpx; }
+.result-count { padding: 20rpx 32rpx 8rpx; font-size: 22rpx; color: #777777; letter-spacing: 1rpx; }
 
 .waterfall { display: flex; gap: 20rpx; padding: 0 32rpx; }
 .waterfall__col { flex: 1; }
 
-.load-more { text-align: center; padding: 24rpx; color: #999999; font-size: 24rpx; letter-spacing: 2rpx; }
-.empty { text-align: center; padding: 100rpx 0; color: #999999; font-size: 26rpx; }
+.load-more { text-align: center; padding: 24rpx; color: #777777; font-size: 24rpx; letter-spacing: 2rpx; }
+.empty { text-align: center; padding: 100rpx 0; color: #777777; font-size: 26rpx; }
 
 .bottom-placeholder { height: 120rpx; }
 </style>

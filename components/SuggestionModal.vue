@@ -53,17 +53,17 @@ function submit() {
   to { opacity: 1; transform: translateY(0); }
 }
 .modal-title { font-size: 32rpx; font-weight: 800; color: #1a1a1a; display: block; text-align: center; letter-spacing: 1rpx; }
-.modal-subtitle { font-size: 20rpx; color: #999999; display: block; text-align: center; margin-top: 6rpx; letter-spacing: 3rpx; }
+.modal-subtitle { font-size: 20rpx; color: #777777; display: block; text-align: center; margin-top: 6rpx; letter-spacing: 3rpx; }
 .textarea-wrap { position: relative; margin: 28rpx 0; }
 .modal-textarea {
   width: 100%; min-height: 220rpx; background: #FBF8FD; border-radius: 16rpx;
   padding: 24rpx; font-size: 26rpx; color: #1a1a1a; border: 1rpx solid #F0F0F0;
   box-sizing: border-box; line-height: 1.6;
 }
-.counter { text-align: right; font-size: 20rpx; color: #999999; margin-top: 8rpx; display: block; }
+.counter { text-align: right; font-size: 20rpx; color: #777777; margin-top: 8rpx; display: block; }
 .modal-actions { display: flex; gap: 16rpx; }
 .modal-btn { flex: 1; padding: 20rpx 0; border-radius: 9999rpx; font-size: 28rpx; font-weight: 600; letter-spacing: 2rpx; text-align: center; }
-.modal-btn--ghost { background: transparent; color: #999999; border: 1rpx solid #F0F0F0; }
+.modal-btn--ghost { background: transparent; color: #777777; border: 1rpx solid #F0F0F0; }
 .modal-btn--fill { background: #52C41A; color: #FFF; box-shadow: 0 4rpx 16rpx rgba(82,196,26,0.2); }
 .modal-btn--fill:active { transform: scale(0.96); }
 </style>

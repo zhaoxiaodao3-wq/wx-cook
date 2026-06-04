@@ -73,12 +73,12 @@ function handleClick() { emit('click', props.recipe.id) }
   position: absolute;
   top: 16rpx;
   right: 16rpx;
-  background: rgba(253, 248, 242, 0.9);
+  background: rgba(251, 248, 253, 0.9);
   backdrop-filter: blur(8rpx);
   padding: 6rpx 16rpx;
   border-radius: 9999rpx;
   font-size: 20rpx;
-  color: #999999;
+  color: #777777;
   letter-spacing: 2rpx;
   font-weight: 500;
 }
@@ -114,7 +114,7 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__author {
   font-size: 22rpx;
-  color: #999999;
+  color: #777777;
 }
 
 .recipe-card__dot {
@@ -127,7 +127,7 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__time {
   font-size: 22rpx;
-  color: #999999;
+  color: #777777;
 }
 
 .recipe-card__footer {
@@ -158,7 +158,7 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__count {
   font-size: 20rpx;
-  color: #999999;
+  color: #777777;
 }
 
 .recipe-card__tags {

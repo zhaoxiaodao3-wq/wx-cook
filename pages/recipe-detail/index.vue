@@ -294,12 +294,12 @@ const hasMySuggestion = computed(() =>
 .detail-author__avatar {
   width: 52rpx; height: 52rpx; border-radius: 50%; margin-right: 14rpx; border: 2rpx solid #F0F0F0;
 }
-.detail-author__name { font-size: 26rpx; color: #999999; font-weight: 600; }
+.detail-author__name { font-size: 26rpx; color: #777777; font-weight: 600; }
 
 .detail-actions { display: flex; gap: 12rpx; margin-top: 28rpx; }
 .detail-action {
   display: flex; align-items: center; gap: 8rpx; padding: 16rpx 28rpx;
-  background: #F8F6FA; border-radius: 9999rpx; font-size: 26rpx; color: #999999; border: 1rpx solid #F0F0F0;
+  background: #F8F6FA; border-radius: 9999rpx; font-size: 26rpx; color: #777777; border: 1rpx solid #F0F0F0;
 }
 .detail-action__icon { font-size: 26rpx; }
 
@@ -308,7 +308,7 @@ const hasMySuggestion = computed(() =>
   flex: 1; text-align: center; padding: 20rpx 8rpx; background: #FBF8FD;
   border-radius: 16rpx; border: 1rpx solid #F0F0F0;
 }
-.detail-meta__label { font-size: 20rpx; color: #999999; display: block; letter-spacing: 2rpx; }
+.detail-meta__label { font-size: 20rpx; color: #777777; display: block; letter-spacing: 2rpx; }
 .detail-meta__value { font-size: 26rpx; font-weight: 700; color: #1a1a1a; margin-top: 6rpx; }
 
 .detail-section {
@@ -323,7 +323,7 @@ const hasMySuggestion = computed(() =>
   width: 44rpx; height: 44rpx; border-radius: 50%; background: #F8F6FA;
   display: flex; align-items: center; justify-content: center; font-size: 28rpx; color: #52C41A; font-weight: 600;
 }
-.serving-num { font-size: 24rpx; color: #999999; font-weight: 600; }
+.serving-num { font-size: 24rpx; color: #777777; font-weight: 600; }
 
 .ingredient-list { border-top: 1rpx solid #F0F0F0; padding-top: 8rpx; }
 .ingredient-item {
@@ -338,7 +338,7 @@ const hasMySuggestion = computed(() =>
 }
 .ingredient-item--checked .ingredient-check { background: #52C41A; border-color: #52C41A; color: #FFF; }
 .ingredient-name { flex: 1; font-size: 27rpx; color: #1a1a1a; font-weight: 500; }
-.ingredient-amount { font-size: 24rpx; color: #999999; font-family: monospace; }
+.ingredient-amount { font-size: 24rpx; color: #777777; font-family: monospace; }
 
 .step-item { display: flex; margin-bottom: 28rpx; }
 .step-num {
@@ -351,14 +351,14 @@ const hasMySuggestion = computed(() =>
 .step-img { width: 100%; border-radius: 14rpx; margin-top: 14rpx; }
 
 .tips-text {
-  font-size: 26rpx; color: #999999; line-height: 1.75; margin-top: 12rpx;
+  font-size: 26rpx; color: #777777; line-height: 1.75; margin-top: 12rpx;
   display: block; background: #FBF8FD; padding: 20rpx; border-radius: 14rpx;
   border-left: 4rpx solid #52C41A;
 }
 
 .review-tabs { display: flex; gap: 36rpx; margin-bottom: 24rpx; }
 .review-tab {
-  font-size: 26rpx; color: #999999; padding-bottom: 8rpx; letter-spacing: 1rpx;
+  font-size: 26rpx; color: #777777; padding-bottom: 8rpx; letter-spacing: 1rpx;
 }
 .review-tab--active { color: #1a1a1a; font-weight: 700; border-bottom: 3rpx solid #52C41A; }
 
@@ -370,9 +370,9 @@ const hasMySuggestion = computed(() =>
 .review-header { display: flex; align-items: center; gap: 12rpx; }
 .review-name { font-size: 26rpx; font-weight: 600; color: #1a1a1a; }
 .review-stars { color: #52C41A; font-size: 20rpx; }
-.suggestion-text { font-size: 26rpx; color: #999999; margin-top: 6rpx; display: block; line-height: 1.6; }
-.review-date { font-size: 20rpx; color: #999999; margin-top: 4rpx; }
-.review-empty { text-align: center; padding: 48rpx 0; color: #999999; font-size: 24rpx; }
+.suggestion-text { font-size: 26rpx; color: #777777; margin-top: 6rpx; display: block; line-height: 1.6; }
+.review-date { font-size: 20rpx; color: #777777; margin-top: 4rpx; }
+.review-empty { text-align: center; padding: 48rpx 0; color: #777777; font-size: 24rpx; }
 .review-del { color: #FF4D4F; font-size: 22rpx; padding: 4rpx 8rpx; }
 
 .bottom-placeholder { height: 48rpx; }

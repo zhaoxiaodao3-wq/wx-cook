@@ -144,7 +144,7 @@ function loadMore() {
 .home-page {
   min-height: 100vh;
   padding-bottom: 140rpx;
-  animation: editorial-enter 400ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation: fade-in-up 400ms ease-out;
 }
 
 /* ── 头部 Hero ── */
@@ -165,7 +165,7 @@ function loadMore() {
 
 .home-header__tagline {
   font-size: 22rpx;
-  color: #999999;
+  color: #777777;
   letter-spacing: 4rpx;
   text-transform: uppercase;
 }
@@ -181,7 +181,7 @@ function loadMore() {
 
 .home-header__subtitle {
   font-size: 24rpx;
-  color: #999999;
+  color: #777777;
   margin-top: 12rpx;
   line-height: 1.5;
 }
@@ -204,7 +204,7 @@ function loadMore() {
 }
 
 .home-header__search-placeholder {
-  color: #999999;
+  color: #777777;
   font-size: 26rpx;
 }
 
@@ -226,7 +226,7 @@ function loadMore() {
   padding: 12rpx 32rpx;
   border-radius: 9999rpx;
   font-size: 26rpx;
-  color: #999999;
+  color: #777777;
   background: transparent;
   margin-right: 12rpx;
   border: 1rpx solid #F0F0F0;
@@ -254,7 +254,7 @@ function loadMore() {
 
 .section-label {
   font-size: 22rpx;
-  color: #999999;
+  color: #777777;
   letter-spacing: 4rpx;
 }
 
@@ -265,7 +265,7 @@ function loadMore() {
 
 .rank-tab {
   font-size: 30rpx;
-  color: #999999;
+  color: #777777;
   font-weight: 500;
   padding-bottom: 8rpx;
   position: relative;
@@ -341,7 +341,7 @@ function loadMore() {
 
 .rank-item__author {
   font-size: 22rpx;
-  color: #999999;
+  color: #777777;
   margin-bottom: 6rpx;
 }
 
@@ -364,7 +364,7 @@ function loadMore() {
 .load-more {
   text-align: center;
   padding: 32rpx;
-  color: #999999;
+  color: #777777;
   font-size: 24rpx;
   letter-spacing: 2rpx;
 }

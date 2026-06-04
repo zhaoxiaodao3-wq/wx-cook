@@ -51,15 +51,15 @@ function submit() { if (rating.value > 0) emit('submit', rating.value) }
   to { opacity: 1; transform: translateY(0); }
 }
 .modal-title { font-size: 32rpx; font-weight: 800; color: #1a1a1a; display: block; letter-spacing: 1rpx; }
-.modal-subtitle { font-size: 22rpx; color: #999999; display: block; margin-top: 8rpx; letter-spacing: 3rpx; }
+.modal-subtitle { font-size: 22rpx; color: #777777; display: block; margin-top: 8rpx; letter-spacing: 3rpx; }
 .stars-row { display: flex; justify-content: center; gap: 20rpx; margin: 36rpx 0 16rpx; }
 .star { font-size: 64rpx; color: #F0F0F0; transition: all 150ms ease; }
 .star:active { transform: scale(1.15); }
-.star--active { color: #52C41A; text-shadow: 0 2rpx 8rpx rgba(240,192,96,0.3); }
+.star--active { color: #52C41A; text-shadow: 0 2rpx 8rpx rgba(82,196,26,0.25); }
 .modal-hint { font-size: 24rpx; color: #52C41A; display: block; margin-bottom: 32rpx; }
 .modal-actions { display: flex; gap: 16rpx; }
 .modal-btn { flex: 1; padding: 20rpx 0; border-radius: 9999rpx; font-size: 28rpx; font-weight: 600; letter-spacing: 2rpx; }
-.modal-btn--ghost { background: transparent; color: #999999; border: 1rpx solid #F0F0F0; }
+.modal-btn--ghost { background: transparent; color: #777777; border: 1rpx solid #F0F0F0; }
 .modal-btn--fill { background: #52C41A; color: #FFF; box-shadow: 0 4rpx 16rpx rgba(82,196,26,0.2); }
 .modal-btn--fill:active { transform: scale(0.96); }
 </style>
