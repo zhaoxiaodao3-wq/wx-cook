@@ -267,13 +267,13 @@ const hasMySuggestion = computed(() =>
 </template>
 
 <style lang="scss" scoped>
-.detail-page { min-height: 100vh; background: #FAFCF9; padding-bottom: 80rpx; }
+.detail-page { min-height: 100vh; background: #FBF8FD; padding-bottom: 80rpx; }
 
 .detail-cover { position: relative; width: 100%; height: 560rpx; }
 .detail-cover__img { width: 100%; height: 100%; }
 .cover-gradient {
   position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
-  background: linear-gradient(to top, rgba(44,62,51,0.65) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%);
 }
 .detail-cover__top {
   position: absolute; top: 0; left: 0; right: 0;
@@ -289,91 +289,91 @@ const hasMySuggestion = computed(() =>
   background: #FFFFFF; border-radius: 28rpx 28rpx 0 0; margin-top: -36rpx;
   position: relative; padding: 36rpx 32rpx 32rpx;
 }
-.detail-title { font-size: 38rpx; font-weight: 800; color: #2C3E33; letter-spacing: -1rpx; line-height: 1.2; }
+.detail-title { font-size: 38rpx; font-weight: 800; color: #1a1a1a; letter-spacing: -1rpx; line-height: 1.2; }
 .detail-author { display: flex; align-items: center; margin-top: 20rpx; }
 .detail-author__avatar {
-  width: 52rpx; height: 52rpx; border-radius: 50%; margin-right: 14rpx; border: 2rpx solid #EAEFEB;
+  width: 52rpx; height: 52rpx; border-radius: 50%; margin-right: 14rpx; border: 2rpx solid #F0F0F0;
 }
-.detail-author__name { font-size: 26rpx; color: #6B8274; font-weight: 600; }
+.detail-author__name { font-size: 26rpx; color: #999999; font-weight: 600; }
 
 .detail-actions { display: flex; gap: 12rpx; margin-top: 28rpx; }
 .detail-action {
   display: flex; align-items: center; gap: 8rpx; padding: 16rpx 28rpx;
-  background: #F5F8F5; border-radius: 9999rpx; font-size: 26rpx; color: #6B8274; border: 1rpx solid #EAEFEB;
+  background: #F8F6FA; border-radius: 9999rpx; font-size: 26rpx; color: #999999; border: 1rpx solid #F0F0F0;
 }
 .detail-action__icon { font-size: 26rpx; }
 
 .detail-meta { display: flex; margin-top: 28rpx; gap: 12rpx; }
 .detail-meta__item {
-  flex: 1; text-align: center; padding: 20rpx 8rpx; background: #FAFCF9;
-  border-radius: 16rpx; border: 1rpx solid #EAEFEB;
+  flex: 1; text-align: center; padding: 20rpx 8rpx; background: #FBF8FD;
+  border-radius: 16rpx; border: 1rpx solid #F0F0F0;
 }
-.detail-meta__label { font-size: 20rpx; color: #8FA89B; display: block; letter-spacing: 2rpx; }
-.detail-meta__value { font-size: 26rpx; font-weight: 700; color: #2C3E33; margin-top: 6rpx; }
+.detail-meta__label { font-size: 20rpx; color: #999999; display: block; letter-spacing: 2rpx; }
+.detail-meta__value { font-size: 26rpx; font-weight: 700; color: #1a1a1a; margin-top: 6rpx; }
 
 .detail-section {
   background: #FFFFFF; margin: 16rpx 32rpx; border-radius: 20rpx;
-  padding: 28rpx; box-shadow: 0 2rpx 16rpx rgba(44,62,51,0.03);
+  padding: 28rpx; box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.03);
 }
 .detail-section__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx; }
-.detail-section__title { font-size: 30rpx; font-weight: 700; color: #2C3E33; letter-spacing: 1rpx; }
+.detail-section__title { font-size: 30rpx; font-weight: 700; color: #1a1a1a; letter-spacing: 1rpx; }
 
 .serving-control { display: flex; align-items: center; gap: 16rpx; }
 .serving-btn {
-  width: 44rpx; height: 44rpx; border-radius: 50%; background: #F5F8F5;
-  display: flex; align-items: center; justify-content: center; font-size: 28rpx; color: #5DBE9E; font-weight: 600;
+  width: 44rpx; height: 44rpx; border-radius: 50%; background: #F8F6FA;
+  display: flex; align-items: center; justify-content: center; font-size: 28rpx; color: #52C41A; font-weight: 600;
 }
-.serving-num { font-size: 24rpx; color: #6B8274; font-weight: 600; }
+.serving-num { font-size: 24rpx; color: #999999; font-weight: 600; }
 
-.ingredient-list { border-top: 1rpx solid #EAEFEB; padding-top: 8rpx; }
+.ingredient-list { border-top: 1rpx solid #F0F0F0; padding-top: 8rpx; }
 .ingredient-item {
   display: flex; align-items: center; padding: 14rpx 0;
-  border-bottom: 1px dashed #EAEFEB;
+  border-bottom: 1px dashed #F0F0F0;
 }
 .ingredient-item--checked { opacity: 0.35; }
 .ingredient-check {
-  width: 36rpx; height: 36rpx; border: 1.5rpx solid #EAEFEB; border-radius: 50%;
+  width: 36rpx; height: 36rpx; border: 1.5rpx solid #F0F0F0; border-radius: 50%;
   display: flex; align-items: center; justify-content: center; margin-right: 14rpx;
   font-size: 22rpx; color: transparent; transition: all 200ms ease; flex-shrink: 0;
 }
-.ingredient-item--checked .ingredient-check { background: #5DBE9E; border-color: #5DBE9E; color: #FFF; }
-.ingredient-name { flex: 1; font-size: 27rpx; color: #2C3E33; font-weight: 500; }
-.ingredient-amount { font-size: 24rpx; color: #8FA89B; font-family: monospace; }
+.ingredient-item--checked .ingredient-check { background: #52C41A; border-color: #52C41A; color: #FFF; }
+.ingredient-name { flex: 1; font-size: 27rpx; color: #1a1a1a; font-weight: 500; }
+.ingredient-amount { font-size: 24rpx; color: #999999; font-family: monospace; }
 
 .step-item { display: flex; margin-bottom: 28rpx; }
 .step-num {
-  width: 52rpx; height: 52rpx; border-radius: 16rpx; background: #5DBE9E; color: #FFF;
+  width: 52rpx; height: 52rpx; border-radius: 16rpx; background: #52C41A; color: #FFF;
   display: flex; align-items: center; justify-content: center; font-size: 24rpx;
   font-weight: 700; flex-shrink: 0; margin-right: 20rpx;
 }
 .step-content { flex: 1; }
-.step-desc { font-size: 26rpx; line-height: 1.75; color: #2C3E33; }
+.step-desc { font-size: 26rpx; line-height: 1.75; color: #1a1a1a; }
 .step-img { width: 100%; border-radius: 14rpx; margin-top: 14rpx; }
 
 .tips-text {
-  font-size: 26rpx; color: #6B8274; line-height: 1.75; margin-top: 12rpx;
-  display: block; background: #FAFCF9; padding: 20rpx; border-radius: 14rpx;
-  border-left: 4rpx solid #F0C060;
+  font-size: 26rpx; color: #999999; line-height: 1.75; margin-top: 12rpx;
+  display: block; background: #FBF8FD; padding: 20rpx; border-radius: 14rpx;
+  border-left: 4rpx solid #52C41A;
 }
 
 .review-tabs { display: flex; gap: 36rpx; margin-bottom: 24rpx; }
 .review-tab {
-  font-size: 26rpx; color: #8FA89B; padding-bottom: 8rpx; letter-spacing: 1rpx;
+  font-size: 26rpx; color: #999999; padding-bottom: 8rpx; letter-spacing: 1rpx;
 }
-.review-tab--active { color: #2C3E33; font-weight: 700; border-bottom: 3rpx solid #5DBE9E; }
+.review-tab--active { color: #1a1a1a; font-weight: 700; border-bottom: 3rpx solid #52C41A; }
 
 .review-item {
-  display: flex; padding: 16rpx 0; border-bottom: 1rpx solid #EAEFEB; align-items: flex-start;
+  display: flex; padding: 16rpx 0; border-bottom: 1rpx solid #F0F0F0; align-items: flex-start;
 }
 .review-avatar { width: 52rpx; height: 52rpx; border-radius: 50%; margin-right: 14rpx; flex-shrink: 0; }
 .review-body { flex: 1; }
 .review-header { display: flex; align-items: center; gap: 12rpx; }
-.review-name { font-size: 26rpx; font-weight: 600; color: #2C3E33; }
-.review-stars { color: #F0C060; font-size: 20rpx; }
-.suggestion-text { font-size: 26rpx; color: #6B8274; margin-top: 6rpx; display: block; line-height: 1.6; }
-.review-date { font-size: 20rpx; color: #8FA89B; margin-top: 4rpx; }
-.review-empty { text-align: center; padding: 48rpx 0; color: #8FA89B; font-size: 24rpx; }
-.review-del { color: #E85D5D; font-size: 22rpx; padding: 4rpx 8rpx; }
+.review-name { font-size: 26rpx; font-weight: 600; color: #1a1a1a; }
+.review-stars { color: #52C41A; font-size: 20rpx; }
+.suggestion-text { font-size: 26rpx; color: #999999; margin-top: 6rpx; display: block; line-height: 1.6; }
+.review-date { font-size: 20rpx; color: #999999; margin-top: 4rpx; }
+.review-empty { text-align: center; padding: 48rpx 0; color: #999999; font-size: 24rpx; }
+.review-del { color: #FF4D4F; font-size: 22rpx; padding: 4rpx 8rpx; }
 
 .bottom-placeholder { height: 48rpx; }
 </style>

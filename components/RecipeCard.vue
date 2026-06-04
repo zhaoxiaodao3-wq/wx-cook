@@ -49,7 +49,7 @@ function handleClick() { emit('click', props.recipe.id) }
   background: #FFFFFF;
   border-radius: 20rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 16rpx rgba(44,62,51,0.04), 0 4rpx 32rpx rgba(44,62,51,0.025);
+  box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.04), 0 4rpx 32rpx rgba(0,0,0,0.025);
   margin-bottom: 32rpx;
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
@@ -78,7 +78,7 @@ function handleClick() { emit('click', props.recipe.id) }
   padding: 6rpx 16rpx;
   border-radius: 9999rpx;
   font-size: 20rpx;
-  color: #6B8274;
+  color: #999999;
   letter-spacing: 2rpx;
   font-weight: 500;
 }
@@ -90,7 +90,7 @@ function handleClick() { emit('click', props.recipe.id) }
 .recipe-card__title {
   font-size: 30rpx;
   font-weight: 700;
-  color: #2C3E33;
+  color: #1a1a1a;
   line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -114,20 +114,20 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__author {
   font-size: 22rpx;
-  color: #6B8274;
+  color: #999999;
 }
 
 .recipe-card__dot {
   width: 4rpx;
   height: 4rpx;
   border-radius: 50%;
-  background: #5DBE9E;
+  background: #52C41A;
   margin: 0 10rpx;
 }
 
 .recipe-card__time {
   font-size: 22rpx;
-  color: #8FA89B;
+  color: #999999;
 }
 
 .recipe-card__footer {
@@ -136,7 +136,7 @@ function handleClick() { emit('click', props.recipe.id) }
   justify-content: space-between;
   margin-top: 16rpx;
   padding-top: 14rpx;
-  border-top: 1rpx solid #EAEFEB;
+  border-top: 1rpx solid #F0F0F0;
 }
 
 .recipe-card__stars {
@@ -146,19 +146,19 @@ function handleClick() { emit('click', props.recipe.id) }
 }
 
 .recipe-card__star-icon {
-  color: #F0C060;
+  color: #52C41A;
   font-size: 22rpx;
 }
 
 .recipe-card__rating {
   font-size: 24rpx;
   font-weight: 700;
-  color: #2C3E33;
+  color: #1a1a1a;
 }
 
 .recipe-card__count {
   font-size: 20rpx;
-  color: #8FA89B;
+  color: #999999;
 }
 
 .recipe-card__tags {
@@ -168,8 +168,8 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__tag {
   font-size: 20rpx;
-  color: #5DBE9E;
-  background: #E8F5EF;
+  color: #52C41A;
+  background: #F0FAF0;
   padding: 4rpx 14rpx;
   border-radius: 9999rpx;
   letter-spacing: 1rpx;

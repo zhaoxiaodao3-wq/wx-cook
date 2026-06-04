@@ -48,7 +48,7 @@ function switchTab(path) {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-top: 1rpx solid #EAEFEB;
+  border-top: 1rpx solid #F0F0F0;
   z-index: 999;
 }
 
@@ -77,13 +77,13 @@ function switchTab(path) {
 }
 
 .tab-bar__item--active .tab-bar__icon-wrap {
-  background: #E8F5EF;
+  background: #F0FAF0;
 }
 
 .tab-bar__icon {
   width: 36rpx;
   height: 36rpx;
-  background: #8FA89B;
+  background: #999999;
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -104,18 +104,18 @@ function switchTab(path) {
 }
 
 .tab-bar__item--active .tab-bar__icon {
-  background: #5DBE9E;
+  background: #52C41A;
 }
 
 .tab-bar__label {
   font-size: 20rpx;
-  color: #8FA89B;
+  color: #999999;
   letter-spacing: 2rpx;
   font-weight: 500;
 }
 
 .tab-bar__item--active .tab-bar__label {
-  color: #5DBE9E;
+  color: #52C41A;
   font-weight: 600;
 }
 </style>

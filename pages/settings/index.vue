@@ -43,13 +43,13 @@ function saveProfile() {
 </template>
 
 <style lang="scss" scoped>
-.settings-page { min-height: 100vh; background: #FAFCF9; padding: 24rpx 28rpx; }
-.settings-section { background: #FFFFFF; border-radius: 20rpx; overflow: hidden; box-shadow: 0 2rpx 16rpx rgba(44,62,51,0.03); }
-.settings-row, .avatar-row { display: flex; align-items: center; justify-content: space-between; padding: 32rpx 28rpx; border-bottom: 1rpx solid #EAEFEB; }
+.settings-page { min-height: 100vh; background: #FBF8FD; padding: 24rpx 28rpx; }
+.settings-section { background: #FFFFFF; border-radius: 20rpx; overflow: hidden; box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.03); }
+.settings-row, .avatar-row { display: flex; align-items: center; justify-content: space-between; padding: 32rpx 28rpx; border-bottom: 1rpx solid #F0F0F0; }
 .settings-row:last-child { border-bottom: none; }
-.settings-label { font-size: 28rpx; color: #2C3E33; flex-shrink: 0; font-weight: 500; }
-.settings-input { text-align: right; font-size: 26rpx; color: #6B8274; flex: 1; margin-left: 32rpx; }
-.settings-avatar { width: 88rpx; height: 88rpx; border-radius: 50%; border: 2rpx solid #EAEFEB; }
-.save-btn { background: #5DBE9E; color: #FFF; text-align: center; padding: 24rpx; border-radius: 9999rpx; margin-top: 56rpx; font-size: 30rpx; font-weight: 700; letter-spacing: 3rpx; box-shadow: 0 4rpx 16rpx rgba(93,190,158,0.2); }
+.settings-label { font-size: 28rpx; color: #1a1a1a; flex-shrink: 0; font-weight: 500; }
+.settings-input { text-align: right; font-size: 26rpx; color: #999999; flex: 1; margin-left: 32rpx; }
+.settings-avatar { width: 88rpx; height: 88rpx; border-radius: 50%; border: 2rpx solid #F0F0F0; }
+.save-btn { background: #52C41A; color: #FFF; text-align: center; padding: 24rpx; border-radius: 9999rpx; margin-top: 56rpx; font-size: 30rpx; font-weight: 700; letter-spacing: 3rpx; box-shadow: 0 4rpx 16rpx rgba(82,196,26,0.2); }
 .save-btn:active { transform: scale(0.97); }
 </style>

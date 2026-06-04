@@ -29,10 +29,25 @@ const canSubmit = computed(() => {
   const hasName = title.value.trim().length > 0
   const hasIngredients = ingredients.value.some(i => i.name.trim().length > 0)
   const hasSteps = cookSteps.value.some(s => s.desc.trim().length > 0)
+
   return hasName && hasIngredients && hasSteps
 })
 
-function nextStep() { currentStep.value = Math.min(3, currentStep.value + 1) }
+function validateStep(step) {
+  if (step === 0) return title.value.trim().length > 0
+  if (step === 1) return ingredients.value.some(i => i.name.trim().length > 0)
+  if (step === 2) return cookSteps.value.some(s => s.desc.trim().length > 0)
+  return true
+}
+
+function nextStep() {
+  if (!validateStep(currentStep.value)) {
+    const hints = ['请填写菜品名称', '请至少添加一项食材', '请至少填写一个制作步骤']
+    uni.showToast({ title: hints[currentStep.value], icon: 'none' })
+    return
+  }
+  currentStep.value = Math.min(3, currentStep.value + 1)
+}
 function prevStep() { currentStep.value = Math.max(0, currentStep.value - 1) }
 
 function addIngredient() { ingredients.value.push({ name: '', amount: '', unit: '' }) }
@@ -54,8 +69,14 @@ function toggleTag(tag) {
 }
 
 function handlePublish() {
+  
   if (!canSubmit.value) {
     isTitleTouched.value = true
+    const hints = []
+    if (!title.value.trim()) hints.push('菜品名称')
+    if (!ingredients.value.some(i => i.name.trim())) hints.push('食材')
+    if (!cookSteps.value.some(s => s.desc.trim())) hints.push('制作步骤')
+    uni.showToast({ title: `请完善：${hints.join('、')}`, icon: 'none' })
     return
   }
   recipeStore.addRecipe({
@@ -112,8 +133,8 @@ function handlePublish() {
       </view>
     </view>
 
-    <!-- Step 0: 基本信息 -->
-    <view v-if="currentStep === 0" class="form-body">
+    <!-- Step 0: 基本信息（v-show 避免 v-if 卸载导致小程序 input 未同步到 ref） -->
+    <view v-show="currentStep === 0" class="form-body">
       <view class="form-card">
         <view class="cover-area" @click="changeCover">
           <image
@@ -164,7 +185,7 @@ function handlePublish() {
     </view>
 
     <!-- Step 1: 食材清单 -->
-    <view v-if="currentStep === 1" class="form-body">
+    <view v-show="currentStep === 1" class="form-body">
       <view class="form-card">
         <view class="form-card__head">
           <text class="form-card__title">添加食材</text>
@@ -184,7 +205,7 @@ function handlePublish() {
     </view>
 
     <!-- Step 2: 制作步骤 -->
-    <view v-if="currentStep === 2" class="form-body">
+    <view v-show="currentStep === 2" class="form-body">
       <view class="form-card">
         <view class="form-card__head">
           <text class="form-card__title">制作步骤</text>
@@ -217,7 +238,7 @@ function handlePublish() {
     </view>
 
     <!-- Step 3: 其他补充 -->
-    <view v-if="currentStep === 3" class="form-body">
+    <view v-show="currentStep === 3" class="form-body">
       <view class="form-card">
         <view class="field">
           <text class="field-label">菜品分类</text>
@@ -268,7 +289,7 @@ function handlePublish() {
 /* ======== 页面 ======== */
 .upload-page {
   min-height: 100vh;
-  background: #FAFCF9;
+  background: #FBF8FD;
   padding-bottom: 200rpx;
 }
 
@@ -276,7 +297,7 @@ function handlePublish() {
 .upload-header {
   background: #FFF;
   padding-bottom: 24rpx;
-  box-shadow: 0 2rpx 12rpx rgba(44,62,51,0.04);
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -287,7 +308,7 @@ function handlePublish() {
   text-align: center;
   font-size: 36rpx;
   font-weight: 700;
-  color: #2C3E33;
+  color: #1a1a1a;
   padding: 16rpx 0 28rpx;
 }
 
@@ -313,15 +334,15 @@ function handlePublish() {
   justify-content: center;
   font-size: 22rpx;
   font-weight: 700;
-  background: #F0F2F0;
-  color: #8FA89B;
+  background: #F0F0F0;
+  color: #999999;
   transition: all 250ms ease;
 }
-.step-dot--active { background: #5DBE9E; color: #FFF; }
-.step-dot--done { background: #E8F5EF; color: #5DBE9E; }
+.step-dot--active { background: #52C41A; color: #FFF; }
+.step-dot--done { background: #F0FAF0; color: #52C41A; }
 .step-check { font-size: 20rpx; }
-.step-name { font-size: 20rpx; color: #8FA89B; }
-.step-name--active { color: #5DBE9E; font-weight: 600; }
+.step-name { font-size: 20rpx; color: #999999; }
+.step-name--active { color: #52C41A; font-weight: 600; }
 
 .step-progress-track {
   position: absolute;
@@ -329,12 +350,12 @@ function handlePublish() {
   left: 90rpx;
   right: 90rpx;
   height: 2rpx;
-  background: #F0F2F0;
+  background: #F0F0F0;
   z-index: 0;
 }
 .step-progress-fill {
   height: 100%;
-  background: #5DBE9E;
+  background: #52C41A;
   transition: width 300ms ease;
 }
 
@@ -345,7 +366,7 @@ function handlePublish() {
   background: #FFF;
   border-radius: 20rpx;
   padding: 28rpx;
-  box-shadow: 0 2rpx 16rpx rgba(44,62,51,0.03);
+  box-shadow: 0 2rpx 16rpx rgba(0,0,0,0.03);
 }
 
 .form-card__head {
@@ -354,16 +375,16 @@ function handlePublish() {
   align-items: center;
   margin-bottom: 20rpx;
 }
-.form-card__title { font-size: 28rpx; font-weight: 700; color: #2C3E33; }
-.form-card__sub { font-size: 22rpx; color: #8FA89B; }
+.form-card__title { font-size: 28rpx; font-weight: 700; color: #1a1a1a; }
+.form-card__sub { font-size: 22rpx; color: #999999; }
 
 /* ======== 封面区 ======== */
 .cover-area {
   width: 100%;
   height: 340rpx;
   border-radius: 16rpx;
-  background: #F5F8F5;
-  border: 2rpx dashed #D0DCD3;
+  background: #F8F6FA;
+  border: 2rpx dashed #D4D4D4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -378,7 +399,7 @@ function handlePublish() {
   gap: 12rpx;
 }
 .cover-icon { font-size: 52rpx; }
-.cover-hint { font-size: 26rpx; color: #8FA89B; }
+.cover-hint { font-size: 26rpx; color: #999999; }
 
 /* ======== 表单项 ======== */
 .field { margin-bottom: 24rpx; }
@@ -386,22 +407,22 @@ function handlePublish() {
   display: block;
   font-size: 24rpx;
   font-weight: 700;
-  color: #4A6355;
+  color: #1a1a1a;
   margin-bottom: 10rpx;
 }
 .field-input {
   width: 100%;
   height: 96rpx;
-  background: #F5F8F5;
+  background: #F8F6FA;
   border-radius: 14rpx;
   padding: 0 20rpx;
   font-size: 27rpx;
-  color: #2C3E33;
+  color: #1a1a1a;
   box-sizing: border-box;
   line-height: 96rpx;
 }
 .field-input::placeholder {
-  color: #BCC8C0;
+  color: #BFBFBF;
   line-height: 96rpx;
 }
 
@@ -417,13 +438,13 @@ function handlePublish() {
   align-items: center;
   justify-content: center;
   border-radius: 14rpx;
-  background: #F5F8F5;
+  background: #F8F6FA;
   font-size: 26rpx;
-  color: #6B8274;
+  color: #999999;
   font-weight: 500;
   transition: all 200ms ease;
 }
-.diff-btn--active { background: #5DBE9E; color: #FFF; }
+.diff-btn--active { background: #52C41A; color: #FFF; }
 
 /* ======== 食材行 ======== */
 .ingredient-row {
@@ -435,7 +456,7 @@ function handlePublish() {
 .ing-name { flex: 1; }
 .ing-amount { width: 180rpx; flex-shrink: 0; }
 .ing-del {
-  color: #E85D5D;
+  color: #FF4D4F;
   font-size: 30rpx;
   padding: 8rpx;
   flex-shrink: 0;
@@ -451,8 +472,8 @@ function handlePublish() {
   width: 48rpx;
   height: 48rpx;
   border-radius: 50%;
-  background: #E8F5EF;
-  color: #5DBE9E;
+  background: #F0FAF0;
+  color: #52C41A;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -465,30 +486,30 @@ function handlePublish() {
 .step-textarea {
   width: 100%;
   height: 180rpx;
-  background: #F5F8F5;
+  background: #F8F6FA;
   border-radius: 14rpx;
   padding: 18rpx 20rpx;
   font-size: 26rpx;
-  color: #2C3E33;
+  color: #1a1a1a;
   box-sizing: border-box;
   line-height: 1.6;
 }
-.step-textarea::placeholder { color: #BCC8C0; }
+.step-textarea::placeholder { color: #BFBFBF; }
 .step-img-add {
   margin-top: 12rpx;
   height: 140rpx;
-  background: #F5F8F5;
+  background: #F8F6FA;
   border-radius: 14rpx;
-  border: 1rpx dashed #D0DCD3;
+  border: 1rpx dashed #D4D4D4;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 .step-img { width: 100%; height: 100%; }
-.step-img-empty { font-size: 24rpx; color: #8FA89B; }
+.step-img-empty { font-size: 24rpx; color: #999999; }
 .step-del {
-  color: #E85D5D;
+  color: #FF4D4F;
   font-size: 30rpx;
   padding: 8rpx;
   flex-shrink: 0;
@@ -497,11 +518,11 @@ function handlePublish() {
 
 /* ======== 虚线添加按钮 ======== */
 .dashed-add {
-  border: 2rpx dashed rgba(93,190,158,0.35);
+  border: 2rpx dashed rgba(82,196,26,0.35);
   border-radius: 14rpx;
   padding: 26rpx 0;
   text-align: center;
-  color: #5DBE9E;
+  color: #52C41A;
   font-size: 27rpx;
   font-weight: 500;
 }
@@ -515,27 +536,27 @@ function handlePublish() {
   align-items: center;
   justify-content: center;
   border-radius: 14rpx;
-  background: #F5F8F5;
+  background: #F8F6FA;
   font-size: 27rpx;
-  color: #6B8274;
+  color: #999999;
   font-weight: 500;
   transition: all 200ms ease;
 }
-.cat-btn--active { background: #5DBE9E; color: #FFF; }
+.cat-btn--active { background: #52C41A; color: #FFF; }
 
 /* 贴士文本框 */
 .tips-textarea {
   width: 100%;
   height: 200rpx;
-  background: #F5F8F5;
+  background: #F8F6FA;
   border-radius: 14rpx;
   padding: 18rpx 20rpx;
   font-size: 26rpx;
-  color: #2C3E33;
+  color: #1a1a1a;
   box-sizing: border-box;
   line-height: 1.6;
 }
-.tips-textarea::placeholder { color: #BCC8C0; }
+.tips-textarea::placeholder { color: #BFBFBF; }
 
 /* ======== 底部按钮栏 ======== */
 .bottom-bar {
@@ -544,7 +565,7 @@ function handlePublish() {
   left: 0;
   right: 0;
   background: #FFF;
-  border-top: 1rpx solid #EAEFEB;
+  border-top: 1rpx solid #F0F0F0;
   padding: 16rpx 28rpx;
   padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
   display: flex;
@@ -563,12 +584,12 @@ function handlePublish() {
   justify-content: center;
 }
 .btn--primary {
-  background: #5DBE9E;
+  background: #52C41A;
   color: #FFF;
-  box-shadow: 0 8rpx 20rpx rgba(93,190,158,0.22);
+  box-shadow: 0 8rpx 20rpx rgba(82,196,26,0.22);
 }
-.btn--primary:active { background: #4AA886; }
-.btn--ghost { background: #F5F8F5; color: #6B8274; font-weight: 600; }
+.btn--primary:active { background: #45A616; }
+.btn--ghost { background: #F8F6FA; color: #999999; font-weight: 600; }
 .btn--disabled { opacity: 0.4; }
 .bottom-spacer { height: 160rpx; }
 </style>

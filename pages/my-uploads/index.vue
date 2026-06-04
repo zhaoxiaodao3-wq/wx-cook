@@ -73,16 +73,16 @@ function removeFavorite(id) { userStore.toggleFavorite(id) }
 </template>
 
 <style lang="scss" scoped>
-.my-uploads-page { min-height: 100vh; background: #FAFCF9; }
-.tabs { display: flex; background: #FFFFFF; padding: 0 32rpx; border-bottom: 1rpx solid #EAEFEB; }
-.tab { flex: 1; text-align: center; padding: 28rpx 0; font-size: 26rpx; color: #8FA89B; border-bottom: 3rpx solid transparent; letter-spacing: 1rpx; transition: all 200ms ease; }
-.tab--active { color: #5DBE9E; font-weight: 700; border-bottom-color: #5DBE9E; }
-.list-item { display: flex; align-items: center; background: #FFFFFF; padding: 20rpx 28rpx; margin: 12rpx 28rpx; border-radius: 20rpx; box-shadow: 0 2rpx 12rpx rgba(44,62,51,0.03); }
+.my-uploads-page { min-height: 100vh; background: #FBF8FD; }
+.tabs { display: flex; background: #FFFFFF; padding: 0 32rpx; border-bottom: 1rpx solid #F0F0F0; }
+.tab { flex: 1; text-align: center; padding: 28rpx 0; font-size: 26rpx; color: #999999; border-bottom: 3rpx solid transparent; letter-spacing: 1rpx; transition: all 200ms ease; }
+.tab--active { color: #52C41A; font-weight: 700; border-bottom-color: #52C41A; }
+.list-item { display: flex; align-items: center; background: #FFFFFF; padding: 20rpx 28rpx; margin: 12rpx 28rpx; border-radius: 20rpx; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); }
 .list-item__cover { width: 100rpx; height: 100rpx; border-radius: 16rpx; margin-right: 18rpx; }
 .list-item__info { flex: 1; }
-.list-item__title { font-size: 28rpx; font-weight: 600; color: #2C3E33; display: block; }
-.list-item__sub { font-size: 22rpx; color: #8FA89B; margin-top: 6rpx; display: block; }
-.list-item__arrow { color: #8FA89B; font-size: 28rpx; }
-.unfav-btn { color: #E85D5D; font-size: 22rpx; padding: 8rpx 16rpx; font-weight: 500; }
-.empty { text-align: center; padding: 100rpx 0; color: #8FA89B; font-size: 26rpx; letter-spacing: 1rpx; }
+.list-item__title { font-size: 28rpx; font-weight: 600; color: #1a1a1a; display: block; }
+.list-item__sub { font-size: 22rpx; color: #999999; margin-top: 6rpx; display: block; }
+.list-item__arrow { color: #999999; font-size: 28rpx; }
+.unfav-btn { color: #FF4D4F; font-size: 22rpx; padding: 8rpx 16rpx; font-weight: 500; }
+.empty { text-align: center; padding: 100rpx 0; color: #999999; font-size: 26rpx; letter-spacing: 1rpx; }
 </style>

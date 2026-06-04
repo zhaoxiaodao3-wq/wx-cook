@@ -1,41 +1,38 @@
 /* ═══════════════════════════════════════════
-   Botanic Fresh — 薄荷田园设计令牌
+   Fresh Harvest — 品牌设计令牌
+   Spec: #52C41A / #FBF8FD / 16rpx 圆角
    ═══════════════════════════════════════════ */
 
 /* ── 色调 Palette ── */
-$color-cream: #FAFCF9;           /* 页底 — 冷白 */
-$color-paper: #FFFFFF;           /* 卡片 — 纯白 */
-$color-espresso: #2C3E33;        /* 主文字 — 深鼠尾草 */
-$color-ink: #6B8274;             /* 辅文字 — 中鼠尾草 */
-$color-muted: #8FA89B;           /* 弱文字 */
-$color-terracotta: #5DBE9E;      /* 主点缀 — 薄荷绿 */
-$color-terracotta-light: #E8F5EF; /* 点缀浅底 */
-$color-terracotta-deep: #3DA87E;  /* 点缀深色 */
-$color-sage: #5DBE9E;            /* 次点缀 — 薄荷绿 */
-$color-sage-light: #E8F5EF;
-$color-gold: #F0C060;           /* 星级 */
-$color-warm-border: #EAEFEB;    /* 分割线 */
-$color-cream-dark: #F5F8F5;     /* 输入框背景 */
+$color-brand: #52C41A;           /* 品牌主色 */
+$color-bg: #FBF8FD;             /* 页面底色 — 浅紫 */
+$color-card: #FFFFFF;           /* 卡片 — 纯白 */
+$color-text: #1a1a1a;           /* 主文字 */
+$color-text-secondary: #999999; /* 辅助文字 */
+$color-error: #FF4D4F;         /* 危险/删除 */
+$color-brand-light: #F0FAF0;   /* 品牌浅底 */
+$color-brand-dark: #45A616;    /* 品牌深色 */
+$color-border: #F0F0F0;       /* 分割线 */
+$color-input-bg: #F8F6FA;      /* 输入框背景 */
 
-/* ── 阴影 Fresh Shadows ── */
-$shadow-subtle: 0 2rpx 12rpx rgba(44,62,51,0.03);
-$shadow-paper: 0 2rpx 20rpx rgba(44,62,51,0.03), 0 4rpx 32rpx rgba(44,62,51,0.02);
-$shadow-raised: 0 4rpx 24rpx rgba(44,62,51,0.05), 0 8rpx 40rpx rgba(44,62,51,0.03);
-$shadow-terracotta: 0 4rpx 16rpx rgba(93,190,158,0.2);
+/* ── 阴影 ── */
+$shadow-card: 0 2rpx 16rpx rgba(0,0,0,0.06);
+$shadow-raised: 0 4rpx 24rpx rgba(0,0,0,0.08);
+$shadow-brand: 0 4rpx 16rpx rgba(82,196,26,0.2);
 
 /* ── 圆角 ── */
+$radius-base: 16rpx;
 $radius-sm: 12rpx;
 $radius-md: 20rpx;
 $radius-lg: 28rpx;
 $radius-full: 9999rpx;
 
-/* ── 间距基准 8rpx grid ── */
+/* ── 间距 ── */
 $space-xs: 8rpx;
 $space-sm: 16rpx;
 $space-md: 24rpx;
 $space-lg: 32rpx;
 $space-xl: 48rpx;
-$space-2xl: 64rpx;
 
 /* ── 排版 ── */
 $font-display: 48rpx;
@@ -51,37 +48,25 @@ $font-mini: 20rpx;
    ═══════════════════════════════════════════ */
 
 page {
-  background-color: $color-cream;
-  color: $color-espresso;
+  background-color: $color-bg;
+  color: $color-text;
   font-size: $font-body;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── 动画关键帧 ── */
-
-@keyframes editorial-enter {
-  from { opacity: 0; transform: translateY(24rpx); }
+/* ── 动画 ── */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16rpx); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes card-rise {
-  from { opacity: 0; transform: translateY(32rpx); }
+  from { opacity: 0; transform: translateY(24rpx); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@keyframes cover-breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-}
-
-@keyframes count-up {
-  0% { opacity: 0; transform: scale(0.5); }
-  60% { transform: scale(1.15); }
-  100% { opacity: 1; transform: scale(1); }
 }
