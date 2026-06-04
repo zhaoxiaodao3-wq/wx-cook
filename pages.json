@@ -41,8 +41,8 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "小圈子菜谱",
-		"navigationBarBackgroundColor": "#FFFCF7",
-		"backgroundColor": "#FDF8F2"
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FAFCF9"
 	},
 	"uniIdRouter": {}
 }

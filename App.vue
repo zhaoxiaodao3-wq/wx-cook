@@ -84,7 +84,7 @@
   left: 0;
   right: 0;
   height: 50%;
-  background: linear-gradient(to top, rgba(60,36,21,0.7) 0%, transparent 100%);
+  background: linear-gradient(to top, rgba(44,62,51,0.7) 0%, transparent 100%);
 }
 
 /* 标签徽章 */

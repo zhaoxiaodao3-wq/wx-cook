@@ -1,27 +1,27 @@
 /* ═══════════════════════════════════════════
-   Warm Editorial — 设计令牌系统
+   Botanic Fresh — 薄荷田园设计令牌
    ═══════════════════════════════════════════ */
 
 /* ── 色调 Palette ── */
-$color-cream: #FDF8F2;           /* 页底 — 暖奶油纸 */
-$color-paper: #FFFCF7;           /* 卡片 — 微暖白 */
-$color-espresso: #3C2415;        /* 主文字 — 深烘咖啡 */
-$color-ink: #5C4033;             /* 辅文字 — 温棕 */
-$color-muted: #A89885;           /* 更弱文字 */
-$color-terracotta: #D4784C;       /* 主点缀 — 陶土橙 */
-$color-terracotta-light: #F5E6DC; /* 点缀浅底 */
-$color-terracotta-deep: #B85C3A;  /* 点缀深色(hover) */
-$color-sage: #7D9B76;            /* 次点缀 — 鼠尾草绿 */
-$color-sage-light: #E8EFE6;
-$color-gold: #C9A96E;           /* 星级 */
-$color-warm-border: #EDE4DA;    /* 分割线 */
-$color-cream-dark: #F5EDE3;     /* 输入框背景 */
+$color-cream: #FAFCF9;           /* 页底 — 冷白 */
+$color-paper: #FFFFFF;           /* 卡片 — 纯白 */
+$color-espresso: #2C3E33;        /* 主文字 — 深鼠尾草 */
+$color-ink: #6B8274;             /* 辅文字 — 中鼠尾草 */
+$color-muted: #8FA89B;           /* 弱文字 */
+$color-terracotta: #5DBE9E;      /* 主点缀 — 薄荷绿 */
+$color-terracotta-light: #E8F5EF; /* 点缀浅底 */
+$color-terracotta-deep: #3DA87E;  /* 点缀深色 */
+$color-sage: #5DBE9E;            /* 次点缀 — 薄荷绿 */
+$color-sage-light: #E8F5EF;
+$color-gold: #F0C060;           /* 星级 */
+$color-warm-border: #EAEFEB;    /* 分割线 */
+$color-cream-dark: #F5F8F5;     /* 输入框背景 */
 
-/* ── 阴影 Paper Shadows ── */
-$shadow-subtle: 0 2rpx 12rpx rgba(60,36,21,0.03);
-$shadow-paper: 0 2rpx 16rpx rgba(60,36,21,0.04), 0 4rpx 32rpx rgba(60,36,21,0.025);
-$shadow-raised: 0 4rpx 24rpx rgba(60,36,21,0.06), 0 8rpx 48rpx rgba(60,36,21,0.035);
-$shadow-terracotta: 0 4rpx 16rpx rgba(212,120,76,0.18);
+/* ── 阴影 Fresh Shadows ── */
+$shadow-subtle: 0 2rpx 12rpx rgba(44,62,51,0.03);
+$shadow-paper: 0 2rpx 20rpx rgba(44,62,51,0.03), 0 4rpx 32rpx rgba(44,62,51,0.02);
+$shadow-raised: 0 4rpx 24rpx rgba(44,62,51,0.05), 0 8rpx 40rpx rgba(44,62,51,0.03);
+$shadow-terracotta: 0 4rpx 16rpx rgba(93,190,158,0.2);
 
 /* ── 圆角 ── */
 $radius-sm: 12rpx;
@@ -38,13 +38,13 @@ $space-xl: 48rpx;
 $space-2xl: 64rpx;
 
 /* ── 排版 ── */
-$font-display: 48rpx;   /* 大标题 */
-$font-headline: 38rpx;   /* 页面标题 */
-$font-title: 32rpx;      /* 卡片标题 */
-$font-body: 27rpx;       /* 正文 */
-$font-label: 24rpx;      /* 标签 */
-$font-caption: 22rpx;    /* 说明文字 */
-$font-mini: 20rpx;       /* 超小文字 */
+$font-display: 48rpx;
+$font-headline: 38rpx;
+$font-title: 32rpx;
+$font-body: 27rpx;
+$font-label: 24rpx;
+$font-caption: 22rpx;
+$font-mini: 20rpx;
 
 /* ═══════════════════════════════════════════
    全局样式
@@ -60,43 +60,26 @@ page {
 
 /* ── 动画关键帧 ── */
 
-/* 页面进入 */
 @keyframes editorial-enter {
-  from {
-    opacity: 0;
-    transform: translateY(24rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24rpx); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* 卡片交错进入 */
 @keyframes card-rise {
-  from {
-    opacity: 0;
-    transform: translateY(32rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(32rpx); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* 淡入 */
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* 封面缩放 */
 @keyframes cover-breathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.02); }
 }
 
-/* 数字弹跳 */
 @keyframes count-up {
   0% { opacity: 0; transform: scale(0.5); }
   60% { transform: scale(1.15); }

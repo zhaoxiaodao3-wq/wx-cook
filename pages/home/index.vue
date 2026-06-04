@@ -149,8 +149,8 @@ function loadMore() {
 
 /* ── 头部 Hero ── */
 .home-header {
-  background: #FFFCF7;
-  border-bottom: 1rpx solid #EDE4DA;
+  background: #FFFFFF;
+  border-bottom: 1rpx solid #EAEFEB;
 }
 
 .home-header__safe {
@@ -165,7 +165,7 @@ function loadMore() {
 
 .home-header__tagline {
   font-size: 22rpx;
-  color: #A89885;
+  color: #8FA89B;
   letter-spacing: 4rpx;
   text-transform: uppercase;
 }
@@ -173,7 +173,7 @@ function loadMore() {
 .home-header__title {
   font-size: 48rpx;
   font-weight: 800;
-  color: #3C2415;
+  color: #2C3E33;
   letter-spacing: -1rpx;
   margin-top: 8rpx;
   line-height: 1.15;
@@ -181,7 +181,7 @@ function loadMore() {
 
 .home-header__subtitle {
   font-size: 24rpx;
-  color: #5C4033;
+  color: #6B8274;
   margin-top: 12rpx;
   line-height: 1.5;
 }
@@ -191,10 +191,10 @@ function loadMore() {
   display: flex;
   align-items: center;
   margin-top: 24rpx;
-  background: #F5EDE3;
+  background: #F5F8F5;
   border-radius: 9999rpx;
   padding: 18rpx 28rpx;
-  border: 1rpx solid #EDE4DA;
+  border: 1rpx solid #EAEFEB;
 }
 
 .home-header__search-icon {
@@ -204,14 +204,14 @@ function loadMore() {
 }
 
 .home-header__search-placeholder {
-  color: #A89885;
+  color: #8FA89B;
   font-size: 26rpx;
 }
 
 /* ── 分类标签 (pill风格) ── */
 .category-bar {
-  background: #FFFCF7;
-  border-bottom: 1rpx solid #EDE4DA;
+  background: #FFFFFF;
+  border-bottom: 1rpx solid #EAEFEB;
   padding-bottom: 20rpx;
   white-space: nowrap;
 }
@@ -226,18 +226,18 @@ function loadMore() {
   padding: 12rpx 32rpx;
   border-radius: 9999rpx;
   font-size: 26rpx;
-  color: #5C4033;
+  color: #6B8274;
   background: transparent;
   margin-right: 12rpx;
-  border: 1rpx solid #EDE4DA;
+  border: 1rpx solid #EAEFEB;
   transition: all 200ms ease;
 }
 
 .category-chip--active {
-  background: #D4784C;
+  background: #5DBE9E;
   color: #FFF;
-  border-color: #D4784C;
-  box-shadow: 0 4rpx 16rpx rgba(212,120,76,0.18);
+  border-color: #5DBE9E;
+  box-shadow: 0 4rpx 16rpx rgba(93,190,158,0.2);
 }
 
 /* ── 区域标题 ── */
@@ -254,7 +254,7 @@ function loadMore() {
 
 .section-label {
   font-size: 22rpx;
-  color: #A89885;
+  color: #8FA89B;
   letter-spacing: 4rpx;
 }
 
@@ -265,14 +265,14 @@ function loadMore() {
 
 .rank-tab {
   font-size: 30rpx;
-  color: #A89885;
+  color: #8FA89B;
   font-weight: 500;
   padding-bottom: 8rpx;
   position: relative;
 }
 
 .rank-tab--active {
-  color: #3C2415;
+  color: #2C3E33;
   font-weight: 700;
 }
 
@@ -283,7 +283,7 @@ function loadMore() {
   left: 0;
   right: 0;
   height: 4rpx;
-  background: #D4784C;
+  background: #5DBE9E;
   border-radius: 2rpx;
 }
 
@@ -295,11 +295,11 @@ function loadMore() {
 .rank-item {
   display: flex;
   align-items: center;
-  background: #FFFCF7;
+  background: #FFFFFF;
   border-radius: 20rpx;
   padding: 20rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 16rpx rgba(60,36,21,0.04), 0 4rpx 32rpx rgba(60,36,21,0.025);
+  box-shadow: 0 2rpx 16rpx rgba(44,62,51,0.04), 0 4rpx 32rpx rgba(44,62,51,0.025);
   transition: transform 150ms ease;
 }
 
@@ -312,13 +312,13 @@ function loadMore() {
   font-weight: 800;
   width: 72rpx;
   text-align: center;
-  color: #EDE4DA;
+  color: #EAEFEB;
   font-style: italic;
   line-height: 1;
 }
 
 .rank-item__num--top {
-  color: #D4784C;
+  color: #5DBE9E;
 }
 
 .rank-item__cover {
@@ -335,19 +335,19 @@ function loadMore() {
 .rank-item__title {
   font-size: 28rpx;
   font-weight: 600;
-  color: #3C2415;
+  color: #2C3E33;
   margin-bottom: 6rpx;
 }
 
 .rank-item__author {
   font-size: 22rpx;
-  color: #A89885;
+  color: #8FA89B;
   margin-bottom: 6rpx;
 }
 
 .rank-item__rating {
   font-size: 24rpx;
-  color: #C9A96E;
+  color: #F0C060;
 }
 
 /* ── 瀑布流 ── */
@@ -364,7 +364,7 @@ function loadMore() {
 .load-more {
   text-align: center;
   padding: 32rpx;
-  color: #A89885;
+  color: #8FA89B;
   font-size: 24rpx;
   letter-spacing: 2rpx;
 }

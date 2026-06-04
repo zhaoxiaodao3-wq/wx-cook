@@ -46,10 +46,10 @@ function handleClick() { emit('click', props.recipe.id) }
 
 <style lang="scss" scoped>
 .recipe-card {
-  background: #FFFCF7;
+  background: #FFFFFF;
   border-radius: 20rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 16rpx rgba(60,36,21,0.04), 0 4rpx 32rpx rgba(60,36,21,0.025);
+  box-shadow: 0 2rpx 16rpx rgba(44,62,51,0.04), 0 4rpx 32rpx rgba(44,62,51,0.025);
   margin-bottom: 32rpx;
   transition: transform 200ms ease, box-shadow 200ms ease;
 }
@@ -78,7 +78,7 @@ function handleClick() { emit('click', props.recipe.id) }
   padding: 6rpx 16rpx;
   border-radius: 9999rpx;
   font-size: 20rpx;
-  color: #5C4033;
+  color: #6B8274;
   letter-spacing: 2rpx;
   font-weight: 500;
 }
@@ -90,7 +90,7 @@ function handleClick() { emit('click', props.recipe.id) }
 .recipe-card__title {
   font-size: 30rpx;
   font-weight: 700;
-  color: #3C2415;
+  color: #2C3E33;
   line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -114,20 +114,20 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__author {
   font-size: 22rpx;
-  color: #5C4033;
+  color: #6B8274;
 }
 
 .recipe-card__dot {
   width: 4rpx;
   height: 4rpx;
   border-radius: 50%;
-  background: #D4784C;
+  background: #5DBE9E;
   margin: 0 10rpx;
 }
 
 .recipe-card__time {
   font-size: 22rpx;
-  color: #A89885;
+  color: #8FA89B;
 }
 
 .recipe-card__footer {
@@ -136,7 +136,7 @@ function handleClick() { emit('click', props.recipe.id) }
   justify-content: space-between;
   margin-top: 16rpx;
   padding-top: 14rpx;
-  border-top: 1rpx solid #EDE4DA;
+  border-top: 1rpx solid #EAEFEB;
 }
 
 .recipe-card__stars {
@@ -146,19 +146,19 @@ function handleClick() { emit('click', props.recipe.id) }
 }
 
 .recipe-card__star-icon {
-  color: #C9A96E;
+  color: #F0C060;
   font-size: 22rpx;
 }
 
 .recipe-card__rating {
   font-size: 24rpx;
   font-weight: 700;
-  color: #3C2415;
+  color: #2C3E33;
 }
 
 .recipe-card__count {
   font-size: 20rpx;
-  color: #A89885;
+  color: #8FA89B;
 }
 
 .recipe-card__tags {
@@ -168,8 +168,8 @@ function handleClick() { emit('click', props.recipe.id) }
 
 .recipe-card__tag {
   font-size: 20rpx;
-  color: #7D9B76;
-  background: #E8EFE6;
+  color: #5DBE9E;
+  background: #E8F5EF;
   padding: 4rpx 14rpx;
   border-radius: 9999rpx;
   letter-spacing: 1rpx;
