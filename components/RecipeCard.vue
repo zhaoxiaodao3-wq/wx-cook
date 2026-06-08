@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { resolveMediaUrl } from '@/utils/media'
 
 const props = defineProps({
   recipe: { type: Object, required: true },
@@ -7,11 +8,11 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 const authorName = computed(() => props.recipe.author?.name || '匿名')
-const authorAvatar = computed(() => props.recipe.author?.avatar || '')
+const authorAvatar = computed(() => resolveMediaUrl(props.recipe.author?.avatar) || '')
 const tagList = computed(() =>
   Array.isArray(props.recipe.tags) ? props.recipe.tags.slice(0, 2) : []
 )
-const coverSrc = computed(() => props.recipe.coverImage || '')
+const coverSrc = computed(() => resolveMediaUrl(props.recipe.coverImage) || '')
 const difficulty = computed(() => props.recipe.difficulty || '')
 const rating = computed(() => props.recipe.rating ?? 0)
 const ratingCount = computed(() => props.recipe.ratingCount ?? 0)

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
-import { hasApiServer } from '@/api/request'
+import { hasApiServer, canLoadRemoteContent } from '@/api/request'
 import { useRecipeStore } from '@/stores/recipe'
 import { useUserStore } from '@/stores/user'
 import RatingModal from '@/components/RatingModal.vue'
@@ -38,7 +38,7 @@ onLoad(async (options) => {
   if (!id) return
   try {
     uni.showLoading({ title: '加载中' })
-    const r = hasApiServer()
+    const r = canLoadRemoteContent()
       ? await recipeStore.fetchRecipeDetail(id)
       : recipeStore.recipeById(id)
     if (r) {
@@ -56,14 +56,14 @@ onLoad(async (options) => {
 })
 
 onUnload(() => {
-  if (hasApiServer()) {
+  if (canLoadRemoteContent()) {
     recipeStore.markFeedsStale()
     recipeStore.refreshPublicFeeds().catch(() => {})
   }
 })
 
 async function goBack() {
-  if (hasApiServer()) {
+  if (canLoadRemoteContent()) {
     try {
       await recipeStore.refreshPublicFeeds()
     } catch {

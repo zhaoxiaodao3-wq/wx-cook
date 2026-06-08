@@ -1,5 +1,5 @@
 import { getRuntimeConfig } from '@/config/runtime'
-import { getToken } from '@/utils/token'
+import { getToken, hasValidToken } from '@/utils/token'
 import { clearSession } from '@/utils/session'
 
 export interface ApiResponse<T = unknown> {
@@ -68,6 +68,25 @@ export function hasApiServer() {
   )
 }
 
+/** 已登录且配置了后端时才应拉远程数据（避免登录门前请求接口） */
+export function canLoadRemoteContent() {
+  return hasApiServer() && hasValidToken()
+}
+
+/** 体验版/线上 Render 冷启动可能较慢 */
+const REQUEST_TIMEOUT_MS = 60000
+
+function buildNetworkError(err: UniApp.GeneralCallbackResult) {
+  const msg = err.errMsg || '网络请求失败'
+  if (msg.includes('timeout')) {
+    return '请求超时：服务器可能正在唤醒，或网络较慢，请稍后重试'
+  }
+  if (msg.includes('url not in domain list') || msg.includes('不在以下 request 合法域名')) {
+    return '域名未配置：请在微信公众平台添加 request 合法域名'
+  }
+  return msg
+}
+
 function buildUrl(path: string, query?: RequestOptions['query']) {
   const { apiBaseUrl } = getRuntimeConfig()
   let url = `${apiBaseUrl}${path}`
@@ -98,6 +117,7 @@ export function request<T>(options: RequestOptions): Promise<T> {
       method,
       data,
       header,
+      timeout: REQUEST_TIMEOUT_MS,
       success(res) {
         const status = res.statusCode || 0
         const body = res.data as ApiResponse<T> & { detail?: string }
@@ -116,7 +136,7 @@ export function request<T>(options: RequestOptions): Promise<T> {
         reject(new Error(parseErrorMessage(res.data, status)))
       },
       fail(err) {
-        reject(new Error(err.errMsg || '网络请求失败'))
+        reject(new Error(buildNetworkError(err)))
       },
     })
   })

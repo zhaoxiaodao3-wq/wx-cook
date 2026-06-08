@@ -1,17 +1,12 @@
 <script setup>
 import { onLaunch } from '@dcloudio/uni-app'
 import { useAuthStore } from '@/stores/auth'
-import { useRecipeStore } from '@/stores/recipe'
-import { hasApiServer } from '@/api/request'
 import { getRuntimeConfig } from '@/config/runtime'
 
 onLaunch(() => {
   const cfg = getRuntimeConfig()
   console.info(`[API] 环境=${cfg.envLabel}(${cfg.env}) api=${cfg.apiBaseUrl}`)
   useAuthStore().init()
-  if (hasApiServer()) {
-    useRecipeStore().initRecipes().catch(() => {})
-  }
 })
 </script>
 

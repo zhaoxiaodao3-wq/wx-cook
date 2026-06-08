@@ -1,6 +1,6 @@
 /**
  * 各环境后端地址（与 cookbook-server 一致：API 前缀 /api/v1，静态资源 /uploads）
- * 部署后请把 trial / release 改成真实域名。
+ * 开发环境走本地 cookbook-server；体验版 / 正式版走线上 Render。
  */
 
 export type AppEnv = 'develop' | 'trial' | 'release'
@@ -33,11 +33,14 @@ export function getDevelopDeviceEndpoints(): ServerEndpoints {
   return endpoints(`http://${DEVELOP_LAN_HOST}:${PORT}`)
 }
 
+/** 线上后端（体验版 / 正式版共用） */
+const PRODUCTION_HOST = 'https://cookbook-server-qdi6.onrender.com'
+
 /** 体验版（微信后台「体验版」扫码） */
-export const TRIAL_ENDPOINTS = endpoints('https://your-staging-domain.com')
+export const TRIAL_ENDPOINTS = endpoints(PRODUCTION_HOST)
 
 /** 正式版（线上用户） */
-export const RELEASE_ENDPOINTS = endpoints('https://your-production-domain.com')
+export const RELEASE_ENDPOINTS = endpoints(PRODUCTION_HOST)
 
 export const ENV_PROFILES: Record<AppEnv, ServerEndpoints> = {
   develop: DEVELOP_DEVTOOLS,

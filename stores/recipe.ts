@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { mockRecipes, CATEGORY_MAP } from '@/data/recipes'
 import type { Recipe } from '@/data/recipes'
-import { hasApiServer } from '@/api/request'
+import { hasApiServer, canLoadRemoteContent } from '@/api/request'
 import { mapApiRecipeDetail, mapApiRecipeListItem } from '@/api/adapters'
 import {
   fetchRecipes,
@@ -95,7 +95,7 @@ export const useRecipeStore = defineStore('recipe', () => {
   }
 
   async function loadFilterMeta() {
-    if (!hasApiServer()) return
+    if (!canLoadRemoteContent()) return
     try {
       const meta = await fetchFilterMeta()
       filterMeta.value = {
@@ -108,7 +108,7 @@ export const useRecipeStore = defineStore('recipe', () => {
   }
 
   async function loadRanked(limit = 10) {
-    if (!hasApiServer()) return
+    if (!canLoadRemoteContent()) return
     const list = await fetchRankedRecipes(limit)
     rankedRecipes.value = list.map(mapApiRecipeListItem)
   }
@@ -138,7 +138,7 @@ export const useRecipeStore = defineStore('recipe', () => {
   }
 
   async function loadRecipeList(opts?: { reset?: boolean; page?: number; force?: boolean }) {
-    if (!hasApiServer()) return
+    if (!canLoadRemoteContent()) return
     if (listLoading.value && !opts?.force) return
     listLoading.value = true
     try {
@@ -163,8 +163,10 @@ export const useRecipeStore = defineStore('recipe', () => {
   }
 
   async function initRecipes() {
-    if (!hasApiServer()) return
+    if (!canLoadRemoteContent()) return
     await Promise.all([loadFilterMeta(), loadRanked(), loadRecipeList({ reset: true })])
+    feedsVersion.value += 1
+    uni.$emit('recipe-feeds-changed')
   }
 
   async function reloadList() {
@@ -181,7 +183,7 @@ export const useRecipeStore = defineStore('recipe', () => {
 
   /** 发现页专用：按最新排序拉列表，不刷新排行榜 */
   async function refreshDiscoverFeeds() {
-    if (!hasApiServer()) return
+    if (!canLoadRemoteContent()) return
     listSort.value = 'createdAt'
     if (!filterMeta.value) {
       try {
@@ -199,7 +201,7 @@ export const useRecipeStore = defineStore('recipe', () => {
     listSort.value = sort
     listPage.value = 1
     listHasMore.value = true
-    if (!hasApiServer()) {
+    if (!canLoadRemoteContent()) {
       feedsVersion.value += 1
       uni.$emit('recipe-feeds-changed')
       return
@@ -211,7 +213,7 @@ export const useRecipeStore = defineStore('recipe', () => {
 
   /** 刷新首页/发现所需的列表与排行榜（Tab 切回、发布、评分后调用） */
   async function refreshPublicFeeds(sort?: 'createdAt' | 'rating') {
-    if (!hasApiServer()) return
+    if (!canLoadRemoteContent()) return
     if (sort) listSort.value = sort
     await Promise.all([loadRanked(), loadRecipeList({ reset: true, force: true })])
     feedsVersion.value += 1
@@ -232,7 +234,7 @@ export const useRecipeStore = defineStore('recipe', () => {
   }
 
   async function loadMoreList() {
-    if (!hasApiServer() || !listHasMore.value || listLoading.value) return
+    if (!canLoadRemoteContent() || !listHasMore.value || listLoading.value) return
     await loadRecipeList({ page: listPage.value + 1 })
   }
 
@@ -492,24 +494,24 @@ export const useRecipeStore = defineStore('recipe', () => {
 
   async function setSearchQuery(q: string) {
     searchQuery.value = q
-    if (hasApiServer()) await reloadList()
+    if (canLoadRemoteContent()) await reloadList()
   }
 
   async function setCategory(c: string) {
     activeCategory.value = c
     activeCuisine.value = ''
     activeTag.value = ''
-    if (hasApiServer()) await reloadList()
+    if (canLoadRemoteContent()) await reloadList()
   }
 
   async function setCuisine(c: string) {
     activeCuisine.value = c
-    if (hasApiServer()) await reloadList()
+    if (canLoadRemoteContent()) await reloadList()
   }
 
   async function setTag(t: string) {
     activeTag.value = t
-    if (hasApiServer()) await reloadList()
+    if (canLoadRemoteContent()) await reloadList()
   }
 
   /** 跳转到 Tab「发现」页（switchTab 不能带 query，用 intent 传递） */

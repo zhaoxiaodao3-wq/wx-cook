@@ -54,6 +54,9 @@ export const useAuthStore = defineStore('auth', () => {
         setSession(session)
       }
       applyUser(session.user)
+      if (hasApiServer()) {
+        useRecipeStore().initRecipes().catch(() => {})
+      }
     } else {
       if (hasApiServer()) clearSession()
       isLoggedIn.value = false

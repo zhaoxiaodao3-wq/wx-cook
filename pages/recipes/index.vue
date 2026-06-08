@@ -6,7 +6,7 @@ import CustomTabBar from '@/components/CustomTabBar.vue'
 import PageShell from '@/components/PageShell.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
 import { CATEGORIES, CUISINES, TAGS } from '@/data/recipes'
-import { hasApiServer } from '@/api/request'
+import { hasApiServer, canLoadRemoteContent } from '@/api/request'
 
 const store = useRecipeStore()
 const categoryList = [...CATEGORIES]
@@ -57,7 +57,7 @@ onShow(() => {
     store.setSearchQuery('').then(bumpListKey).catch(() => {})
   } else {
     searchInput.value = store.searchQuery
-    if (hasApiServer()) {
+    if (canLoadRemoteContent()) {
       store.refreshDiscoverFeeds().then(bumpListKey).catch(() => {})
     }
   }

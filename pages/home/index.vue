@@ -6,7 +6,7 @@ import CustomTabBar from '@/components/CustomTabBar.vue'
 import PageShell from '@/components/PageShell.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
 import { CATEGORIES } from '@/data/recipes'
-import { hasApiServer } from '@/api/request'
+import { hasApiServer, canLoadRemoteContent } from '@/api/request'
 
 const store = useRecipeStore()
 const categories = CATEGORIES
@@ -36,7 +36,7 @@ async function reloadHome() {
   store.setSearchQuery('')
   store.setCuisine('')
   store.setTag('')
-  if (hasApiServer()) {
+  if (canLoadRemoteContent()) {
     await store.refreshPublicFeeds(listSortForTab(rankTab.value))
   }
   pageKey.value = store.feedsVersion
@@ -46,7 +46,7 @@ async function onRankTabTap(tab) {
   if (rankTab.value === tab) return
   rankTab.value = tab
   page.value = 1
-  if (hasApiServer()) {
+  if (canLoadRemoteContent()) {
     await store.setListSort(listSortForTab(tab))
   }
   pageKey.value = store.feedsVersion
@@ -54,7 +54,6 @@ async function onRankTabTap(tab) {
 
 onMounted(() => {
   uni.$on('recipe-feeds-changed', onFeedsChanged)
-  reloadHome().catch(() => {})
 })
 
 onUnmounted(() => {
@@ -66,7 +65,9 @@ function onFeedsChanged() {
 }
 
 onShow(() => {
-  reloadHome().catch(() => {})
+  if (canLoadRemoteContent()) {
+    reloadHome().catch(() => {})
+  }
 })
 
 function onSearchTap() {
